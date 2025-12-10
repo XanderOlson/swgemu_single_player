@@ -427,14 +427,24 @@ void SceneObjectImplementation::notifyLoadFromDatabase() {
 				if (!obj->isPlayerCreature()) {
 					obj->setContainmentType(4);
 				} else {
+					auto slotKey = slottedObjects.elementAt(i).getKey();
+
 					if (isVehicleObject()) {
 						obj->setContainmentType(PlayerArrangement::RIDER);
 					} else if (isPilotChair()) {
 						obj->setContainmentType(PlayerArrangement::SHIP_PILOT_POB);
 					} else if (isOperationsChair()) {
 						obj->setContainmentType(PlayerArrangement::SHIP_OPERATIONS_POB);
+					} else if (isShipTurret() && slotKey == "ship_gunner0_pob") {
+						obj->setContainmentType(PlayerArrangement::SHIP_GUNNER0_POB);
+					} else if (isShipTurret() && slotKey == "ship_gunner1_pob") {
+						obj->setContainmentType(PlayerArrangement::SHIP_GUNNER1_POB);
 					} else if (isCellObject()) {
 						obj->setContainmentType(-1);
+					} else if (isMultiPassengerShip() && slotKey == "ship_gunner1") {
+						obj->setContainmentType(PlayerArrangement::SHIP_GUNNER1);
+					} else {
+						obj->setContainmentType(PlayerArrangement::SHIP_PILOT); // 5
 					}
 				}
 			}
