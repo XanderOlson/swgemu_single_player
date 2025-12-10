@@ -1564,7 +1564,7 @@ void TangibleObjectImplementation::notifyInsert(TreeEntry* object) {
 
 	auto sceneO = static_cast<SceneObject*>(object);
 
-	if (sceneO == nullptr || !sceneO->isPlayerCreature()) {
+	if (sceneO == nullptr || !sceneO->isPlayerCreature() || getObjectID() == sceneO->getParentID()) {
 		return;
 	}
 

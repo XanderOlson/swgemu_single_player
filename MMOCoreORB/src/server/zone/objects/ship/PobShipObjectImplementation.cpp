@@ -643,9 +643,18 @@ void PobShipObjectImplementation::sendContainerObjectsTo(SceneObject* sceneO, bo
 		for (int j = 0; j < cell->getContainerObjectsSize(); ++j) {
 			auto object = cell->getContainerObject(j);
 
-			if (object == nullptr || object->getObjectID() == playerId) {
+			if (object == nullptr) {
 				continue;
 			}
+
+			uint64 objectID = object->getObjectID();
+
+			if (objectID == playerId || objectID == player->getParentID()) {
+				// info(true) << "PobShipObject -- Sending Cell #" << i << " SKIPPING item #" << j << " Object: " << object->getDisplayedName();
+				continue;
+			}
+
+			// info(true) << "PobShipObject -- Sending Cell #" << i << " sending item #" << j << " Object: " << object->getDisplayedName() << " to Player: " <<  sceneO->getDisplayedName();
 
 			object->sendTo(player, true);
 		}

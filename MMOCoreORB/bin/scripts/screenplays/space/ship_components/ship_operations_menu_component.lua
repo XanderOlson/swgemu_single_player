@@ -93,15 +93,23 @@ function ShipOperationsMenuComponent:handleObjectMenuSelect(pOpsChair, pPlayer, 
 		-- Faction Check
 		local shipFaction = TangibleObject(pShip):getFaction()
 
-		if (shipFaction == FACTIONIMPERIAL and not SpaceHelpers:isImperialPilot(pPlayer)) then
-			player:sendSystemMessage("@space/space_interaction:wrong_faction")
+		local pGhost = player:getPlayerObject()
+
+		if (pGhost == nil) then
 			return 0
-		elseif (shipFaction == FACTIONREBEL and not SpaceHelpers:isRebelPilot(pPlayer)) then
-			player:sendSystemMessage("@space/space_interaction:wrong_faction")
-			return 0
-		elseif (shipFaction == FACTIONNEUTRAL and not SpaceHelpers:isNeutralPilot(pPlayer)) then
-			player:sendSystemMessage("@space/space_interaction:wrong_faction")
-			return 0
+		end
+
+		if (not PlayerObject(pGhost):isPrivileged()) then
+			if (shipFaction == FACTIONIMPERIAL and not SpaceHelpers:isImperialPilot(pPlayer)) then
+				player:sendSystemMessage("@space/space_interaction:wrong_faction")
+				return 0
+			elseif (shipFaction == FACTIONREBEL and not SpaceHelpers:isRebelPilot(pPlayer)) then
+				player:sendSystemMessage("@space/space_interaction:wrong_faction")
+				return 0
+			elseif (shipFaction == FACTIONNEUTRAL and not SpaceHelpers:isNeutralPilot(pPlayer)) then
+				player:sendSystemMessage("@space/space_interaction:wrong_faction")
+				return 0
+			end
 		end
 
 		if (SceneObject(pOpsChair):getSlottedObject("ship_operations_station") ~= nil) then

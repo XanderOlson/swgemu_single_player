@@ -461,7 +461,8 @@ void SceneObjectImplementation::notifyLoadFromDatabase() {
 
 	}
 
-	if (zone != nullptr) {
+	// Players are sent into the zone or parent when they connect
+	if (zone != nullptr && !isPlayerCreature()) {
 		class InsertZoneTask : public Task {
 			Reference<SceneObject*> obj;
 			Zone* zone;
