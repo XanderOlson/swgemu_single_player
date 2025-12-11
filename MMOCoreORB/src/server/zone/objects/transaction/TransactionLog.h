@@ -366,7 +366,8 @@ public:
 
 	void addWorldPosition(String context, SceneObject* scno);
 
-	static const String getNewTrxID();
+	// Source codes: 0=TransactionLog, 1=SWGRealmsAPI, 2=ig-88a, 3=reserved
+	static const String getNewTrxID(uint8 source = 0);
 
 	static bool getVerbose();
 

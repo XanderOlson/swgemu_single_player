@@ -15,6 +15,7 @@
 #include "SWGRealmsAPI.h"
 
 #include "server/login/account/Account.h"
+#include "server/zone/objects/transaction/TransactionLog.h"
 #include "server/zone/ZoneClientSession.h"
 #include "server/login/objects/GalaxyBanEntry.h"
 #include "server/login/objects/CharacterListEntry.h"
@@ -667,10 +668,7 @@ JSONSerializationType SWGRealmsAPI::getStatsAsJSON() const {
 SWGRealmsAPIResult::SWGRealmsAPIResult() {
 	API_TRACE(this, "ctor");
 
-	// Generate simple code for log tracing
-	uint64 trxid = (System::getMikroTime() << 8) | System::random(255);
-
-	resultClientTrxId = String::hexvalueOf(trxid);
+	resultClientTrxId = TransactionLog::getNewTrxID(1); // source=1 for SWGRealmsAPI
 	resultAction = ApprovalAction::UNKNOWN;
 	resultElapsedTimeMS = 0ull;
 	blockingReceived = false;
