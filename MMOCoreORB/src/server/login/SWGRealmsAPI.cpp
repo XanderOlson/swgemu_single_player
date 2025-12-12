@@ -205,7 +205,22 @@ void SWGRealmsAPI::apiCall(Reference<SWGRealmsAPIResult*> result, const String& 
 		apiPath = path + (path.indexOf("?") == -1 ? "?" : "&") + "debug=1&dryrun=1";
 	}
 
-	debug() << src << " START apiCall [path=" << apiPath << "]";
+	auto logPrefix = result->getClientTrxId() + " " + src + ": ";
+
+	debug() << logPrefix << "START apiCall [path=" << apiPath << "]";
+
+	// Log POST body with sensitive fields redacted
+	if (!body.isEmpty()) {
+		try {
+			auto bodyJson = json::value::parse(U(body.toCharArray()));
+			if (bodyJson.has_field(U("password"))) {
+				bodyJson[U("password")] = json::value::string(U("*redacted*"));
+			}
+			debug() << logPrefix << "POST body: " << bodyJson.serialize().c_str();
+		} catch (...) {
+			debug() << logPrefix << "POST body: (failed to parse for redaction)";
+		}
+	}
 
 	API_TRACE(result, "apiCall_start");
 
@@ -240,6 +255,7 @@ void SWGRealmsAPI::apiCall(Reference<SWGRealmsAPIResult*> result, const String& 
 
 	httpClient->request(req)
 		.then([this, src, apiPath, result](pplx::task<http_response> task) {
+			auto logPrefix = result->getClientTrxId() + " " + src + ": ";
 			http_response resp;
 			bool failed = false;
 
@@ -247,14 +263,14 @@ void SWGRealmsAPI::apiCall(Reference<SWGRealmsAPIResult*> result, const String& 
 				resp = task.get();
 				API_TRACE(result, "http_response_received");
 			} catch (const http_exception& e) {
-				error() << src << " " << apiPath << " HTTP Exception caught: " << e.what();
+				error() << logPrefix << apiPath << " HTTP Exception caught: " << e.what();
 				failed = true;
 			}
 
 			if (failed || resp.status_code() != 200) {
 				incrementErrorCount();
 
-				error() << src << " HTTP Status " << resp.status_code() << " returned.";
+				error() << logPrefix << "HTTP Status " << resp.status_code() << " returned.";
 
 				auto json_err = json::value();
 
@@ -386,7 +402,7 @@ void SWGRealmsAPI::apiCall(Reference<SWGRealmsAPIResult*> result, const String& 
 void SWGRealmsAPI::apiNotify(const String& src, const String& basePath) {
 	Reference<SessionApprovalResult*> result = new SessionApprovalResult([this, src](const SessionApprovalResult& r) {
 		if (!r.isActionAllowed()) {
-			error() << src << " unexpected failure: " << r;
+			error() << r.getClientTrxId() << " " << src << ": unexpected failure: " << r;
 		}
 	});
 

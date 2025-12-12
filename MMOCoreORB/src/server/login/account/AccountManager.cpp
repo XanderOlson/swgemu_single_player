@@ -100,7 +100,10 @@ void AccountManager::loginAccount(LoginClient* client, Message* packet) {
 		auto sessionId = result.getSessionID();
 
 		if (sessionId.isEmpty()) {
-			loginClient->sendErrorMessage("Login Error", "Your session key was invalid, exit the client and try logging in again, if this continues contact support.");
+			StringBuffer errorMsg;
+			errorMsg << "Your session key was invalid, exit the client and try logging in again, if this continues contact support.\n\ntrx_id: " << result.getTrxId();
+
+			loginClient->sendErrorMessage("Login Error", errorMsg.toString());
 
 			error() << "missing sessionId in createSession for user [" << username << "]: " << result.getLogMessage();
 
