@@ -1553,8 +1553,9 @@ void TangibleObjectImplementation::sendTo(SceneObject* player, bool doClose, boo
 }
 
 void TangibleObjectImplementation::notifyInsert(TreeEntry* object) {
-	if (object == nullptr)
+	if (object == nullptr) {
 		return;
+	}
 
 	SceneObjectImplementation::notifyInsert(object);
 
@@ -1564,7 +1565,7 @@ void TangibleObjectImplementation::notifyInsert(TreeEntry* object) {
 
 	auto sceneO = static_cast<SceneObject*>(object);
 
-	if (sceneO == nullptr || !sceneO->isPlayerCreature() || getObjectID() == sceneO->getParentID()) {
+	if (sceneO == nullptr || !sceneO->isPlayerCreature() || getObjectID() == sceneO->getParentID() || hasObjectInSlottedContainer(sceneO)) {
 		return;
 	}
 

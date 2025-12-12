@@ -2267,12 +2267,14 @@ bool CreatureObjectImplementation::verifyCredits(int credits) {
 
 void CreatureObjectImplementation::notifyLoadFromDatabase() {
 	TangibleObjectImplementation::notifyLoadFromDatabase();
-	/**
-	 * Here we are loading the schematics based on the skills that the
-	 * player has, we do this incase we change the items
-	 * in the schematic group.
-	 */
-	PlayerObject* ghost = getPlayerObject();
+
+	// info(true) << getDisplayedName() << " --  CreatureObjectImplementation::notifyLoadFromDatabase called";
+
+	/*
+	* Here we are loading the schematics based on the skills that the
+	* player has, we do this incase we change the items
+	* in the schematic group.
+	*/
 
 	if (hasState(CreatureState::ALERT)) {
 		clearState(CreatureState::ALERT);
@@ -2304,24 +2306,34 @@ void CreatureObjectImplementation::notifyLoadFromDatabase() {
 		setPosture(CreaturePosture::UPRIGHT);
 	}
 
+	auto ghost = getPlayerObject();
+
 	if (ghost != nullptr) {
-		getZoneServer()->getPlayerManager()->fixHAM(asCreatureObject());
-		getZoneServer()->getPlayerManager()->fixBuffSkillMods(asCreatureObject());
-        }
+		auto zoneServer = server->getZoneServer();
+
+		if (zoneServer != nullptr) {
+			auto playerManager = zoneServer->getPlayerManager();
+
+			if (playerManager != nullptr) {
+				playerManager->fixHAM(asCreatureObject());
+				playerManager->fixBuffSkillMods(asCreatureObject());
+			}
+		}
+	}
 
 	for (int i = 0; i < creatureBuffs.getBuffListSize(); ++i) {
 		ManagedReference<Buff*> buff = creatureBuffs.getBuffByIndex(i);
 
-		if (buff != nullptr)
+		if (buff != nullptr) {
 			buff->loadBuffDurationEvent(asCreatureObject());
+		}
 	}
 
-	if (ghost == nullptr)
+	if (ghost == nullptr) {
 		return;
+	}
 
-	ZoneServer* zoneServer = server->getZoneServer();
-	SkillManager* skillManager = SkillManager::instance();
-
+	auto skillManager = SkillManager::instance();
 	const SkillList* playerSkillList = getSkillList();
 
 	int totalSkillPointsWasted = 250;
@@ -2346,8 +2358,9 @@ void CreatureObjectImplementation::notifyLoadFromDatabase() {
 
 	skillManager->updateXpLimits(ghost);
 
-	if (getZone() != nullptr)
+	if (getZone() != nullptr) {
 		ghost->setLinkDead();
+	}
 }
 
 void CreatureObjectImplementation::notifyInsert(TreeEntry* obj) {

@@ -1080,12 +1080,10 @@ class PlayerObject extends IntangibleObject {
 		return savedTerrainName;
 	}
 
+	public native void setSavedTerrainName(final string name);
+
 	public void setSavedParentID(unsigned long id) {
 		savedParentID = id;
-	}
-
-	public void setSavedTerrainName(final string name) {
-		savedTerrainName = name;
 	}
 
 	public void setBirthDate(int date) {

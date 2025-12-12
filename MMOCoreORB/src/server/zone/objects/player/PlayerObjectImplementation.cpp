@@ -387,8 +387,12 @@ void PlayerObjectImplementation::unload() {
 		// Player is in a ship in space, send them back to their launch location
 		if (zone->isSpaceZone()) {
 			zoneName = launchPoint.getGoundZoneName();
-
 			Vector3 launchLoc = launchPoint.getLocation();
+
+			if (zoneName.isEmpty()) {
+				zoneName = "corellia";
+				launchLoc.set(-66, 28, -4711);
+			}
 
 			creature->setPosition(launchLoc.getX(), launchLoc.getZ(), launchLoc.getY());
 			creature->incrementMovementCounter();
@@ -405,7 +409,7 @@ void PlayerObjectImplementation::unload() {
 		}
 
 		// Set the saved zone
-		savedTerrainName = zoneName;
+		setSavedTerrainName(zoneName);
 
 		// Remove player from world
 		creature->destroyObjectFromWorld(true);
@@ -1363,6 +1367,15 @@ void PlayerObjectImplementation::doDigest(int fillingReduction) {
 		if (drinkFilling < 0)
 			drinkFilling = 0;
 	}
+}
+
+void PlayerObjectImplementation::setSavedTerrainName(const String& zoneName) {
+	if (zoneName.isEmpty()) {
+		error() << "PlayerObject attempting to set empty terrain name -- ID: " << getObjectID();
+		return;
+	}
+
+	savedTerrainName = zoneName;
 }
 
 Vector<ManagedReference<DraftSchematic* > > PlayerObjectImplementation::filterSchematicList(
@@ -2534,7 +2547,9 @@ void PlayerObjectImplementation::setLinkDead(bool isSafeLogout) {
 
 	logoutTimeStamp.updateToCurrentTime();
 
-	if(!isSafeLogout) {
+	// info(true) << creature->getDisplayedName() << " -- PlayerObjectImplementation::setLinkDead";
+
+	if (!isSafeLogout) {
 		info("went link dead");
 		logoutTimeStamp.addMiliTime(ConfigManager::instance()->getInt("Core3.PlayerObject.LinkDeadDelay", 3 * 60) * 1000); // 3 minutes if unsafe
 	}
