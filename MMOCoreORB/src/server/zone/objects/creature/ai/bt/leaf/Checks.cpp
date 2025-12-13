@@ -153,11 +153,11 @@ template<> bool CheckFollowInWeaponRange::check(AiAgent* agent) const {
 
 #ifdef DEBUG_AI
 	if (agent->peekBlackboard("aiDebug") && agent->readBlackboard("aiDebug") == true) {
-		agent->info(true) << "CheckFollowInWeaponRange -- followRange: " << followRange << " maxRange: " << maxRange;
+		agent->info(true) << "CheckFollowInWeaponRange -- followRange: " << followRange << " maxRange squared: " << (maxRange * maxRange);
 	}
 #endif // DEBUG_AI
 
-	return maxRange > followRange;
+	return (maxRange * maxRange) > followRange;
 }
 
 template<> bool CheckFollowClosestIdealRange::check(AiAgent* agent) const {
@@ -178,22 +178,24 @@ template<> bool CheckFollowClosestIdealRange::check(AiAgent* agent) const {
 		secondaryWeapon = agent->getPrimaryWeapon();
 	}
 
-	if (secondaryWeapon == nullptr) {
-		return true;
-	} else if (primaryWeapon == nullptr) {
+	// Primary weapon is null, this should never happen. Agent will use unarmed
+	if (primaryWeapon == nullptr) {
 		return false;
+	// Secondary Weapon is null, always choose primary
+	} else if (secondaryWeapon == nullptr) {
+		return true;
 	}
+
+	float primaryRange = primaryWeapon->getIdealRange();
+	float secondaryRange = secondaryWeapon->getIdealRange();
 
 #ifdef DEBUG_AI
 	if (agent->peekBlackboard("aiDebug") && agent->readBlackboard("aiDebug") == true)
-		agent->info(true) << "CheckFollowClosestIdealRange -- Follow Range: " << followRange << " primaryWeapon range: " << primaryWeapon->getMaxRange() << " secondaryWeapon: " << secondaryWeapon->getMaxRange();
+		agent->info(true) << "CheckFollowClosestIdealRange -- Follow Range: " << followRange << " primaryWeapon ideal range: " << primaryRange << " secondaryWeapon ideal range: " << secondaryRange;
 #endif // DEBUG_AI
 
-	if (secondaryWeapon->getMaxRange() < followRange) {
-		return true;
-	}
-
-	return fabs(primaryWeapon->getIdealRange() - followRange) < fabs(secondaryWeapon->getIdealRange() - followRange + 1.f);
+	// Choose the weapon that whose ideal range is closest to current follow range
+	return fabs((primaryRange * primaryRange) - (followRange + System::frandom(2.0f))) < fabs((secondaryRange * secondaryRange) - (followRange + System::frandom(2.0f)));
 }
 
 template<> bool CheckRandomLevel::check(AiAgent* agent) const {
