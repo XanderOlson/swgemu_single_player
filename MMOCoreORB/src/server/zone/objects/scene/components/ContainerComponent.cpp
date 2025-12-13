@@ -400,8 +400,8 @@ bool ContainerComponent::removeObject(SceneObject* sceneObject, SceneObject* obj
 		containerObjects->drop(object->getObjectID());
 
 		if (objParent->hasObjectInContainer(object->getObjectID()) || objParent->hasObjectInSlottedContainer(object)) {
-			sceneObject->error("trying to remove an object that is in a different object");
-			objParent->info("i am the parent", true);
+			sceneObject->error() << "Trying to remove an object that is contained in a different object -- " << sceneObject->_getClassName() << " ID: " << sceneObject->getObjectID() << " Object to Remove: " << object->getDisplayedName() << " Class: " << object->_getClassName() << " ID: " << object->getObjectID() <<
+			"Current Parent: " << objParent->_getClassName() << " ID: " << objParent->getObjectID();
 
 			return false;
 		} else if (nullifyParent) {
@@ -436,8 +436,8 @@ bool ContainerComponent::removeObject(SceneObject* sceneObject, SceneObject* obj
 		}
 	}
 
-	if (containerObjects->contains(object->getObjectID())) {
-		containerObjects->drop(object->getObjectID());
+	if (containerObjects->contains(object->getObjectID()) && !containerObjects->drop(object->getObjectID())) {
+		sceneObject->error() << sceneObject->_getClassName() << " ID: " << sceneObject->getObjectID() << " Failed to drop container object: " << object->getDisplayedName() << " Class: " << object->_getClassName() << " ID: " << object->getObjectID();
 	}
 
 	if (nullifyParent) {
