@@ -2999,6 +2999,13 @@ void AiAgentImplementation::runBehaviorTree() {
 
 #ifdef DEBUG_AI
 		bool alwaysActive = ConfigManager::instance()->getAiAgentLoadTesting();
+
+		bool sendDebug = peekBlackboard("aiDebug") && readBlackboard("aiDebug") == true;
+
+		if (sendDebug) {
+			printf("\n\n\n");
+			info(true) << getDisplayedName() << " - ID: " << getObjectID() << " runBehaviorTree -- called";
+		}
 #else // DEBUG_AI
 		bool alwaysActive = false;
 #endif // DEBUG_AI
@@ -3018,19 +3025,21 @@ void AiAgentImplementation::runBehaviorTree() {
 		Time startTime;
 		startTime.updateToCurrentTime();
 
-		if (peekBlackboard("aiDebug") && readBlackboard("aiDebug") == true)
+		if (sendDebug)
 			info("Performing root behavior: " + rootBehavior->print(), true);
 #endif // DEBUG_AI
 
 		// activate AI
 		Behavior::Status actionStatus = rootBehavior->doAction(asAiAgent());
 
-		if (actionStatus == Behavior::RUNNING)
+		if (actionStatus == Behavior::RUNNING) {
 			popRunningChain(); // don't keep root in the running chain
+		}
 
 #ifdef DEBUG_AI
-		if (peekBlackboard("aiDebug") && readBlackboard("aiDebug") == true)
+		if (sendDebug) {
 			info("rootBehavior->doAction() took " + String::valueOf((int)startTime.miliDifference()) + "ms to complete.", true);
+		}
 #endif // DEBUG_AI
 
 		activateAiBehavior(true);
@@ -3266,7 +3275,7 @@ float AiAgentImplementation::getMaxDistance() {
 		}
 		case AiAgent::FOLLOWING:
 			if (followCopy == nullptr)
-				return 0.1f;
+				return 1.f;
 
 			if (!checkLineOfSight(followCopy)) {
 				return 1.0f;
@@ -3292,21 +3301,20 @@ float AiAgentImplementation::getMaxDistance() {
 				}
 			} else if (getCurrentWeapon() != nullptr) {
 				Reference<WeaponObject*> currentWeap = getCurrentWeapon();
-				float weapMaxRange = 1.0f;
+				float weaponIdealRange = 2.0f;
 
 				if (currentWeap != nullptr) {
-					weapMaxRange = Math::min(currentWeap->getIdealRange(), currentWeap->getMaxRange());
-
-					if (currentWeap->isMeleeWeapon() && weapMaxRange > 8) {
-						weapMaxRange = 3.f;
+					weaponIdealRange = Math::max(2.0f, (Math::min(currentWeap->getIdealRange(), currentWeap->getMaxRange()) + getTemplateRadius() + followCopy->getTemplateRadius()));
+#ifdef DEBUG_AI
+					if (peekBlackboard("aiDebug") && readBlackboard("aiDebug") == true) {
+						info(true) << "AiAgentImplementation::getMaxDistance() -- weaponIdealRange: " << weaponIdealRange << " primaryWeapon: " << currentWeap->getDisplayedName() << " Current Weapon ID: " << currentWeap->getObjectID();
 					}
-
-					weapMaxRange = Math::max(1.0f, weapMaxRange + getTemplateRadius() + followCopy->getTemplateRadius());
+#endif // DEBUG_AI
 				}
 
-				return weapMaxRange;
+				return weaponIdealRange;
 			} else {
-				return 1 + getTemplateRadius() + followCopy->getTemplateRadius();
+				return 1.f + getTemplateRadius() + followCopy->getTemplateRadius();
 			}
 			break;
 		case AiAgent::PATHING_HOME:
