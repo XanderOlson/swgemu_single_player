@@ -98,6 +98,11 @@ function PilotSeatMenuComponent:handleObjectMenuSelect(pPilotChair, pPlayer, sel
 			return 0
 		end
 
+		-- Check if occupied
+		if (SceneObject(pPilotChair):getSlottedObject("ship_pilot_pob") ~= nil) then
+			return 0
+		end
+
 		player:storePets()
 
 		-- Add in their piloting state

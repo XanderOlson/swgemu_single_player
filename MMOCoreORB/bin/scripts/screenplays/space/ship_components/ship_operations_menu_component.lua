@@ -112,8 +112,7 @@ function ShipOperationsMenuComponent:handleObjectMenuSelect(pOpsChair, pPlayer, 
 			end
 		end
 
-		if (SceneObject(pOpsChair):getSlottedObject("ship_operations_station") ~= nil) then
-			player:sendSystemMessage("The Ship Operations Chair is already occupied.")
+		if (SceneObject(pOpsChair):getSlottedObject("ship_operations_pob") ~= nil) then
 			return 0
 		end
 

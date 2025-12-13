@@ -1749,7 +1749,7 @@ CreatureObject* ShipObjectImplementation::getShipOperator() {
 		return nullptr;
 	}
 
-	return chair->getSlottedObject("ship_operations_station").castTo<CreatureObject*>();
+	return chair->getSlottedObject("ship_operations_pob").castTo<CreatureObject*>();
 }
 
 CreatureObject* ShipObjectImplementation::getTurretOperatorTop() {
