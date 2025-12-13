@@ -2461,10 +2461,11 @@ int CreatureObjectImplementation::notifyObjectInserted(SceneObject* object) {
 }
 
 int CreatureObjectImplementation::notifyObjectRemoved(SceneObject* object) {
-	if (object->isWeaponObject())
+	if (object->isWeaponObject()) {
 		setWeapon( nullptr);
+	}
 
-	return TangibleObjectImplementation::notifyObjectInserted(object);
+	return TangibleObjectImplementation::notifyObjectRemoved(object);
 }
 
 void CreatureObjectImplementation::setCreatureLink(CreatureObject* object,
