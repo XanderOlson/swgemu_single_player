@@ -323,22 +323,36 @@ public:
 
 		StringBuffer body;
 		body << "Player Name:\t" << target->getFirstName() << endl;
+		body << "ID: " << target->getObjectID() << endl << endl;
 		body << "Claimed Rewards:" << endl;
 		body << "\tMilestone\tReward" << endl;
 
+		// Sorosuub Yacht claim
+		body << "\t" << "1";
+		String claimedSorosuub = targetGhost->getChosenVeteranReward(1);
+
+		if (claimedSorosuub.isEmpty()) {
+			body << "\t\t\t" << "Unclaimed" << endl;
+		} else {
+			body << "\t\t\t" << claimedSorosuub << endl;
+		}
+
+		// Standard reward milestones
 		for (int i = 0; i < playerManager->getNumVeteranRewardMilestones(); i++) {
 			int milestone = playerManager->getVeteranRewardMilestone(i);
+
 			body << "\t" << String::valueOf(milestone);
 			String claimedReward = targetGhost->getChosenVeteranReward(milestone);
+
 			if (claimedReward.isEmpty()) {
-				body << "\t\t" << "Unclaimed" << endl;
+				body << (milestone > 90 ? "\t\t" : "\t\t\t") << "Unclaimed" << endl;
 			} else {
-				body << "\t\t" << claimedReward << endl;
+				body << (milestone > 90 ? "\t\t" : "\t\t\t") << claimedReward << endl;
 			}
 		}
 
 		ManagedReference<SuiMessageBox*> box = new SuiMessageBox(creature, 0);
-		box->setPromptTitle("Veteran Reward Info");
+		box->setPromptTitle("Veteran Reward Info - " + target->getFirstName());
 		box->setPromptText(body.toString());
 		box->setUsingObject(target);
 		box->setForceCloseDisabled();
