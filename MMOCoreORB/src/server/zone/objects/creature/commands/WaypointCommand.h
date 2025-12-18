@@ -60,17 +60,16 @@ public:
 
 		float x = creature->getPositionX();
 		float y = creature->getPositionY();
-		float z = (isSpaceZone) ? creature->getPositionZ() : 0.0f;
+		float z = (isSpaceZone ? creature->getPositionZ() : 0.f);
 
 		ManagedReference<SceneObject*> rootParent = creature->getRootParent();
 
 		if (rootParent != nullptr) {
-			x = rootParent ->getPositionX();
-			y = rootParent ->getPositionY();
+			auto playerWorld = creature->getWorldPosition();
 
-			if (isSpaceZone) {
-				z = rootParent->getPositionZ();
-			}
+			x = playerWorld.getX();
+			y = playerWorld.getY();
+			z = (isSpaceZone ? playerWorld.getZ() : 0.f);
 		}
 
 		ManagedReference<SceneObject*> targetObject = zoneServer->getObject(target).get();
@@ -156,9 +155,12 @@ public:
 		} else if (targetObject != nullptr) {
 			Locker crosslocker(targetObject, creature);
 
-			x = targetObject->getWorldPositionX();
-			y = targetObject->getWorldPositionY();
-			z = isSpaceZone ? targetObject->getWorldPositionZ() : z;
+			auto targetWorld = targetObject->getWorldPosition();
+
+			x = targetWorld.getX();
+			y = targetWorld.getY();
+			z = (isSpaceZone ? targetWorld.getZ() : 0.f);
+
 			waypointName = targetObject->getDisplayedName();
 		}
 
