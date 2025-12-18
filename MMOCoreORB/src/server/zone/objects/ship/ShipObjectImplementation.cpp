@@ -754,11 +754,19 @@ void ShipObjectImplementation::updatePlayersInShip(bool lightUpdate, bool sendPa
 
 		auto parent = shipMember->getParent().get();
 
-		if (parent != nullptr && parent == thisShip) {
-			shipMember->setPosition(worldPosition.getX(), worldPosition.getZ(), worldPosition.getY());
+		if (parent == nullptr) {
+			continue;
 		}
 
-		shipMember->updateZoneWithParent(parent, lightUpdate, sendPackets);
+		if (parent != thisShip) {
+			auto parentPosition = parent->getPosition();
+
+			shipMember->setPosition(parentPosition.getX(), parentPosition.getZ(), parentPosition.getY());
+			shipMember->updateZoneWithParent(parent, lightUpdate, sendPackets);
+		} else {
+			shipMember->setPosition(worldPosition.getX(), worldPosition.getZ(), worldPosition.getY());
+			shipMember->updateZoneWithParent(thisShip, lightUpdate, sendPackets);
+		}
 	}
 }
 
@@ -2372,6 +2380,10 @@ bool ShipObjectImplementation::isShipDestroyed() {
 	return getChassisCurrentHealth() <= 0.f;
 }
 
+bool ShipObjectImplementation::isShipDocking() {
+	return optionsBitmask & OptionBitmask::DOCKING;
+}
+
 bool ShipObjectImplementation::isComponentInstalled(uint32 slot) {
 	return getShipComponentMap()->get(slot) != 0;
 }
@@ -2792,4 +2804,8 @@ float ShipObjectImplementation::getNextDistance() {
 
 float ShipObjectImplementation::getNextRotation() {
 	return shipTransform.getNextRotation();
+}
+
+Vector3 ShipObjectImplementation::getPlayerLocationInShip(const Vector3& playerPosition) {
+	return SpaceMath::getGlobalVector(playerPosition, conjugateMatrix) + getWorldPosition();
 }

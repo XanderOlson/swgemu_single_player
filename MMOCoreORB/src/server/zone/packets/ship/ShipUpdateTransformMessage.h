@@ -85,22 +85,22 @@ public:
 		insertInt(syncStamp ? syncStamp : ship->getSyncStamp());
 	}
 
-    ShipUpdateTransformMessage(ShipObject* ship, const Vector3& position, PackedVelocity& velocity, uint32 syncStamp = 0) : BaseMessage(50) {
-        insertShort(0x08); //Opcode
-        insertInt(0x76026fb9); //Message
-        insertShort(ship->getUniqueID());
+	ShipUpdateTransformMessage(ShipObject* ship, const Vector3& position, PackedVelocity& velocity, uint32 syncStamp = 0) : BaseMessage(50) {
+		insertShort(0x08); //Opcode
+		insertInt(0x76026fb9); //Message
+		insertShort(ship->getUniqueID());
 
-        writePackedDirection(ship->getDirection());
-        writePackedPosition(position);
+		writePackedDirection(ship->getDirection());
+		writePackedPosition(position);
 
-        velocity.write(this);
+		velocity.write(this);
 
-        insertSignedByte(0);
-        insertSignedByte(0);
-        insertSignedByte(0);
+		insertSignedByte(0);
+		insertSignedByte(0);
+		insertSignedByte(0);
 
-        insertInt(syncStamp ? syncStamp : ship->getSyncStamp());
-    }
+		insertInt(syncStamp ? syncStamp : ship->getSyncStamp());
+	}
 
 	void writePackedPosition(const Vector3& position) {
 		PackedPosition packed;
