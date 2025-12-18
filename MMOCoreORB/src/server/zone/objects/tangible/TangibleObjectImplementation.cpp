@@ -1575,7 +1575,7 @@ void TangibleObjectImplementation::notifyInsert(TreeEntry* object) {
 Vector3 TangibleObjectImplementation::getWorldPosition() {
 	auto root = getRootParent();
 
-	if (root != nullptr && root->isPobShip()) {
+	if (root != nullptr && (root->isBuildingObject() || root->isPobShip())) {
 		updateWorldPosition(false);
 	}
 
