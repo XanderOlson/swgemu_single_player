@@ -758,14 +758,10 @@ void ShipObjectImplementation::updatePlayersInShip(bool lightUpdate, bool sendPa
 			continue;
 		}
 
-		if (parent != thisShip) {
-			auto parentPosition = parent->getPosition();
-
-			shipMember->setPosition(parentPosition.getX(), parentPosition.getZ(), parentPosition.getY());
-			shipMember->updateZoneWithParent(parent, lightUpdate, sendPackets);
-		} else {
-			shipMember->setPosition(worldPosition.getX(), worldPosition.getZ(), worldPosition.getY());
+		if (parent == thisShip) {
 			shipMember->updateZoneWithParent(thisShip, lightUpdate, sendPackets);
+		} else {
+			shipMember->updateZoneWithParent(parent, lightUpdate, sendPackets);
 		}
 	}
 }

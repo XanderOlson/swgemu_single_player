@@ -43,21 +43,23 @@ void SpaceZoneComponent::teleport(SceneObject* sceneObject, float newPositionX, 
 	ZoneServer* zoneServer = sceneObject->getZoneServer();
 	Zone* zone = sceneObject->getZone();
 
-	if (zone == nullptr || !zone->isSpaceZone())
+	if (zone == nullptr || !zone->isSpaceZone()) {
 		return;
+	}
 
 	if (parentID != 0) {
 		Reference<SceneObject*> newParent = zoneServer->getObject(parentID);
 
-		if (newParent == nullptr || !newParent->isCellObject())
+		if (newParent == nullptr) {
 			return;
+		}
 
 		if (newPositionX != sceneObject->getPositionX() || newPositionZ != sceneObject->getPositionZ() || newPositionY != sceneObject->getPositionY()) {
 			sceneObject->setPosition(newPositionX, newPositionZ, newPositionY);
 			sceneObject->updateZoneWithParent(newParent, false, false);
 		}
 
-		//sceneObject->incrementMovementCounter();
+		sceneObject->incrementMovementCounter();
 
 		DataTransformWithParent* pack = new DataTransformWithParent(sceneObject);
 		sceneObject->broadcastMessage(pack, true, false);
@@ -67,7 +69,7 @@ void SpaceZoneComponent::teleport(SceneObject* sceneObject, float newPositionX, 
 			sceneObject->updateZone(false, false);
 		}
 
-		//sceneObject->incrementMovementCounter();
+		sceneObject->incrementMovementCounter();
 
 		DataTransform* pack = new DataTransform(sceneObject);
 		sceneObject->broadcastMessage(pack, true, false);

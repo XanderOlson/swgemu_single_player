@@ -186,11 +186,14 @@ public:
 
 #ifdef DEBUG_SELECT_CHAR_CALLBACK
 		debugMsg << "Player Arrangement: " << playerArrangement << "\nsavedParentID: " << savedParentID << "\nLast Logout World Position: " << lastWorldPosition.toString() << endl;
+		debugMsg << "Player Position : " << player->getPosition().toString() << " World Position: " << player->getWorldPosition().toString() << endl;
 
-		if (playerParent != nullptr)
+		if (playerParent != nullptr) {
 			debugMsg << "playerParent: " << playerParent->getObjectName()->getFullPath() << " ID: " << playerParent->getObjectID() << endl;
-		else
+			debugMsg << "playerParent Position - " << playerParent->getWorldPosition().toString();
+		} else {
 			debugMsg << "playerParent: nullptr" << endl;
+		}
 
 		if (currentParent != nullptr)
 			debugMsg << "currentParent: " << currentParent->getObjectName()->getFullPath() << " ID: " << currentParent->getObjectID() << endl;
