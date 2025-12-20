@@ -206,12 +206,15 @@ public:
 
 		if (evadeTime != nullptr && evadeTime->isPast()) {
 			evadeTime->updateToCurrentTime();
-			evadeTime->addMiliTime(evadeDelay);
 
-			// agent->info(true) << agent->getDisplayedName() << " Evade delay set for " << evadeDelay;
+			uint64 randomEvade = evadeDelay + System::random(evadeDelay);
+
+			evadeTime->addMiliTime(randomEvade);
+
+			// agent->info(true) << agent->getDisplayedName() << " Evade delay set for " << randomEvade;
 		}
 
-		// agent->info(true) << agent->getDisplayedName() << " Evade Success -- Evade Delay: " << evadeDelay;
+		// agent->info(true) << agent->getDisplayedName() << " Evade Success";
 
 		return SUCCESS;
 	}
