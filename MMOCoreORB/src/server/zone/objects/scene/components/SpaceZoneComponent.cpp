@@ -6,7 +6,6 @@
 #include "SpaceZoneComponent.h"
 #include "server/zone/SpaceZone.h"
 #include "server/zone/objects/area/ActiveArea.h"
-#include "server/zone/objects/building/BuildingObject.h"
 #include "server/zone/objects/scene/SceneObject.h"
 #include "server/zone/objects/ship/ShipObject.h"
 #include "server/zone/packets/object/DataTransform.h"
@@ -139,20 +138,32 @@ void SpaceZoneComponent::updateZoneWithParent(SceneObject* sceneObject, SceneObj
 
 	Locker _locker(spaceZone);
 
-	if (oldParent != newParent) {
-		// Player is in POB Ship cell
-		if (newParent->isCellObject()) {
-			newParent->transferObject(sceneObject, -1, true);
-		// Player is in slotted position
-		} else if (newParent->isValidJtlParent()) {
+	if (oldParent == nullptr) {
+		newParent->transferObject(sceneObject, sceneObject->getContainmentType(), true);
+
+		spaceZone->unlock();
+	// Object already has a parent, so is either transferring to a new one or moving within the current and checking for active areas update
+	} else {
+		if (oldParent != newParent) {
 			newParent->transferObject(sceneObject, sceneObject->getContainmentType(), true);
+
+			spaceZone->unlock();
+		// Object is not changing parents, unlock the zone and just check for active areas upate.
+		} else {
+			spaceZone->unlock();
+
+			try {
+				TangibleObject* tano = sceneObject->asTangibleObject();
+
+				if (tano != nullptr) {
+					spaceZone->updateActiveAreas(tano);
+				}
+			} catch (Exception& e) {
+				sceneObject->error(e.getMessage());
+				e.printStackTrace();
+			}
 		}
 	}
-
-	spaceZone->update(sceneObject);
-	spaceZone->inRange(sceneObject, spaceZone->getZoneObjectRange());
-
-	spaceZone->unlock();
 
 	// Notify in range objects of the players movement update inside a container in space
 	try {
@@ -296,9 +307,10 @@ void SpaceZoneComponent::destroyObjectFromWorld(SceneObject* sceneObject, bool s
 	Zone* spaceZone = sceneObject->getLocalZone();
 
 	if (par != nullptr) {
-		uint64 parentID = sceneObject->getParentID();
+		// uint64 parentID = sceneObject->getParentID();
 		par->removeObject(sceneObject, nullptr, false);
 
+		/*
 		if (par->isCellObject()) {
 			ManagedReference<BuildingObject*> build = par->getParent().get().castTo<BuildingObject*>();
 
@@ -309,6 +321,7 @@ void SpaceZoneComponent::destroyObjectFromWorld(SceneObject* sceneObject, bool s
 					build->onExit(creature, parentID);
 			}
 		}
+		*/
 
 		sceneObject->notifyObservers(ObserverEventType::OBJECTREMOVEDFROMZONE, sceneObject, 0);
 	} else if (spaceZone != nullptr) {

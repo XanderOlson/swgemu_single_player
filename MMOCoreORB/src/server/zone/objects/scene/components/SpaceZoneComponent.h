@@ -11,25 +11,19 @@
 #include "engine/engine.h"
 #include "SceneObjectComponent.h"
 
-
 namespace server {
- namespace zone {
-  namespace objects {
-   namespace scene {
-    class SceneObject;
-   }
-
-   namespace building {
-    class BuildingObject;
-   }
-  }
-
-  class SpaceZone;
- }
+namespace zone {
+namespace objects {
+namespace scene {
+class SceneObject;
 }
+} // namespace objects
+
+class SpaceZone;
+} // namespace zone
+} // namespace server
 
 using namespace server::zone::objects::scene;
-using namespace server::zone::objects::building;
 using namespace server::zone;
 
 #include "server/zone/TreeEntry.h"
@@ -55,16 +49,13 @@ public:
 
 	virtual void updateZoneWithParent(SceneObject* sceneObject, SceneObject* newParent, bool lightUpdate, bool sendPackets = true) const;
 
-	virtual void notifyPositionUpdate(SceneObject* sceneObject, TreeEntry* entry) const {
-	};
+	virtual void notifyPositionUpdate(SceneObject* sceneObject, TreeEntry* entry) const {};
 
 	virtual void notifySelfPositionUpdate(SceneObject* sceneObject) const;
 
-	virtual void notifyInsert(SceneObject* sceneObject, TreeEntry* entry) const {
-	};
+	virtual void notifyInsert(SceneObject* sceneObject, TreeEntry* entry) const {};
 
-	virtual void notifyDissapear(SceneObject* sceneObject, TreeEntry* entry) const {
-	};
+	virtual void notifyDissapear(SceneObject* sceneObject, TreeEntry* entry) const {};
 
 	void updateInRangeObjectsOnMount(SceneObject* sceneObject) const;
 
@@ -72,8 +63,7 @@ public:
 
 	void removeObjectFromZone(SceneObject* sceneObject, SpaceZone* zone, SceneObject* par) const;
 
-	static void removeAllObjectsFromCOV(CloseObjectsVector *closeobjects, SortedVector<ManagedReference<TreeEntry *> > &closeSceneObjects, SceneObject *sceneObject, SceneObject *vectorOwner);
+	static void removeAllObjectsFromCOV(CloseObjectsVector* closeobjects, SortedVector<ManagedReference<TreeEntry*>>& closeSceneObjects, SceneObject* sceneObject, SceneObject* vectorOwner);
 };
-
 
 #endif /* SPACEZONECOMPONENT_H_ */
