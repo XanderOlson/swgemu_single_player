@@ -77,6 +77,7 @@ namespace server {
 			Mutex blockingMutex;
 			Condition blockingCondition;
 			bool blockingReceived;
+			bool useSignalQueue;  // Use non-blocking signal queue for callback
 
 #ifdef WITH_SWGREALMS_CALLSTATS
 			// Call trace for detailed profiling (maintains insertion order)
@@ -567,7 +568,8 @@ namespace server {
 			int getStreamPendingCount() const;
 
 			// Task queues
-			static const TaskQueue* getCustomQueue();        // 4 threads for API callbacks
+			static const TaskQueue* getCustomQueue();        // Blocks during save - for async callbacks that modify objects
+			static const TaskQueue* getSignalQueue();        // Non-blocking - for blocking call completion signals only
 			static const TaskQueue* getCustomMetricsQueue(); // 1 thread for metrics (BDB handle optimization)
 			void scheduleMetricsPublish();
 		};

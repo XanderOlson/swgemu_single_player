@@ -374,16 +374,21 @@ void SWGRealmsAPI::apiCall(Reference<SWGRealmsAPIResult*> result, const String& 
 
 			API_TRACE(result, "queue_scheduled");
 
-			// Track queue depth before submitting - warn on new peaks
-			auto queue = getCustomQueue();
-			int queueDepth = queue->size();
-			int peak = peakQueueDepth.get();
-			while (queueDepth > peak) {
-				if (peakQueueDepth.compareAndSet(peak, queueDepth)) {
-					warning() << logPrefix << "new peak API callback queue depth: " << queueDepth;
-					break;
+			// Use signal queue for blocking calls (just broadcast completion)
+			// Use main queue for async calls (may modify managed objects)
+			auto queue = result->useSignalQueue ? getSignalQueue() : getCustomQueue();
+
+			// Track queue depth before submitting - warn on new peaks (main queue only)
+			if (!result->useSignalQueue) {
+				int queueDepth = queue->size();
+				int peak = peakQueueDepth.get();
+				while (queueDepth > peak) {
+					if (peakQueueDepth.compareAndSet(peak, queueDepth)) {
+						warning() << logPrefix << "new peak API callback queue depth: " << queueDepth;
+						break;
+					}
+					peak = peakQueueDepth.get();
 				}
-				peak = peakQueueDepth.get();
 			}
 
 			auto scheduledTime = Time();
@@ -405,6 +410,9 @@ void SWGRealmsAPI::apiNotify(const String& src, const String& basePath) {
 			error() << r.getClientTrxId() << " " << src << ": unexpected failure: " << r;
 		}
 	});
+
+	// Fire-and-forget notifications use signal queue - callback just logs, doesn't modify objects
+	result->useSignalQueue = true;
 
 	apiCall(result.castTo<SWGRealmsAPIResult*>(), src, basePath);
 }
@@ -688,6 +696,7 @@ SWGRealmsAPIResult::SWGRealmsAPIResult() {
 	resultAction = ApprovalAction::UNKNOWN;
 	resultElapsedTimeMS = 0ull;
 	blockingReceived = false;
+	useSignalQueue = false;
 
 	resultDebug.setNullValue("<not set>");
 }
@@ -975,6 +984,10 @@ bool SWGRealmsAPI::apiCallBlocking(Reference<SWGRealmsAPIResult*> result, const 
 
 	// Reset blocking state
 	result->blockingReceived = false;
+
+	// Use signal queue for completion callback - it doesn't block during saves
+	// This prevents timeout when a blocking call is waiting during a save
+	result->useSignalQueue = true;
 
 	// Set callback that signals completion
 	result->callback = [result]() {
@@ -2187,11 +2200,21 @@ public:
 const TaskQueue* SWGRealmsAPI::getCustomQueue() {
 	static auto customQueue = []() {
 		auto numThreads = ConfigManager::instance()->getInt("Core3.Login.API.WorkerThreads", 4);
-		// Don't block during save - API callbacks must run to prevent timeout of blocking callers
-		return Core::getTaskManager()->initializeCustomQueue("SWGRealmsAPI", numThreads, false);
+		// This queue blocks during saves - safe for callbacks that modify managed objects
+		return Core::getTaskManager()->initializeCustomQueue("SWGRealmsAPI", numThreads);
 	}();
 
 	return customQueue;
+}
+
+const TaskQueue* SWGRealmsAPI::getSignalQueue() {
+	static auto signalQueue = []() {
+		// Non-blocking queue for blocking call completion signals only
+		// These callbacks just broadcast() to wake up the waiting thread
+		return Core::getTaskManager()->initializeCustomQueue("SWGRealmsSignal", 1, false);
+	}();
+
+	return signalQueue;
 }
 
 const TaskQueue* SWGRealmsAPI::getCustomMetricsQueue() {
