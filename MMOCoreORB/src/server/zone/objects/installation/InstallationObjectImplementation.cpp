@@ -370,34 +370,13 @@ void InstallationObjectImplementation::updateHopper(Time& workingTime, bool shut
 		errorString = "harvester_no_resource"; // No resource selected.  Shutting down.
 	}
 
-	if (!errorString.isEmpty() && isActive()) {
-		StringIdChatParameter stringId("shared", errorString);
-		broadcastToOperators(new ChatSystemMessage(stringId));
-
-		resourceHopperTimestamp.updateToCurrentTime();
-		currentSpawn = nullptr;
-		setActive(false);
-		auto msg = info();
-
-		msg << errorString;
-
-		for (int i = 0; i < operatorList.size(); ++i) {
-			if (i == 0) {
-				msg << "; Operators:";
-			}
-
-			auto player = operatorList.get(i);
-
-			msg << " " << player->getObjectID();
+	// Invalid state - no spawn or container to work with
+	if (currentSpawn == nullptr || container == nullptr) {
+		if (!errorString.isEmpty() && isActive()) {
+			StringIdChatParameter stringId("shared", errorString);
+			broadcastToOperators(new ChatSystemMessage(stringId));
+			setActive(false);
 		}
-
-		msg << ".";
-		msg.flush();
-	}
-
-	// Invalid state just stop and return
-	if (currentSpawn == nullptr || container == nullptr || container->getSpawnID() != currentSpawn->getObjectID()) {
-		setActive(false);
 		return;
 	}
 
@@ -448,14 +427,28 @@ void InstallationObjectImplementation::updateHopper(Time& workingTime, bool shut
 	if (shutdownAfterUpdate)
 		setActive(false);
 
-	/*InstallationObjectDeltaMessage7* inso7 = new InstallationObjectDeltaMessage7( _this.getReferenceUnsafeStaticCast());
-	inso7->startUpdate(0x0D);
-	resourceHopper.set(0, container, inso7, 1);
-	inso7->updateHopperSize(getHopperSize());
-	inso7->close();
+	// Handle error notification after calculation is complete
+	if (!errorString.isEmpty()) {
+		StringIdChatParameter stringId("shared", errorString);
+		broadcastToOperators(new ChatSystemMessage(stringId));
 
-	broadcastToOperators(inso7);*/
+		auto msg = info();
+		msg << errorString;
 
+		for (int i = 0; i < operatorList.size(); ++i) {
+			if (i == 0) {
+				msg << "; Operators:";
+			}
+
+			auto player = operatorList.get(i);
+			msg << " " << player->getObjectID();
+		}
+
+		msg << ".";
+		msg.flush();
+
+		currentSpawn = nullptr;
+	}
 }
 
 
