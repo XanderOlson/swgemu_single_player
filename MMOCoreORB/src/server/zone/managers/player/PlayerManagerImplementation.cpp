@@ -1064,52 +1064,64 @@ void PlayerManagerImplementation::createTutorialBuilding(CreatureObject* player)
 	Zone* zone = server->getZone("tutorial");
 
 	if (zone == nullptr) {
-		error("Character creation failed, tutorial zone disabled.");
+		error() << "Character creation failed, tutorial zone disabled.";
 		return;
 	}
 
-	Reference<TutorialBuildingObject*> tutorial = server->createObject(STRING_HASHCODE("object/building/general/newbie_hall.iff"), 1).castTo<TutorialBuildingObject*>();
+	Reference<TutorialBuildingObject*> tutorial = server->createObject(STRING_HASHCODE("object/building/general/newbie_hall.iff"), 0).castTo<TutorialBuildingObject*>();
 
 	if (tutorial == nullptr) {
-		error("Tutorial building creation failed.");
+		error() << "Character creation failed, unable to create player tutorial building.";
 		return;
 	}
 
-	Locker locker(tutorial);
+	Locker tutClocker(tutorial, player);
 
 	tutorial->createCellObjects();
 	tutorial->setPublicStructure(true);
 	tutorial->setTutorialOwnerID(player->getObjectID());
 
 	tutorial->initializePosition(System::random(5000), 0, System::random(5000));
-	zone->transferObject(tutorial, -1, true);
 
-	locker.release();
+	if (!zone->transferObject(tutorial, -1)) {
+		tutorial->destroyObjectFromWorld(true);
 
-	SceneObject* cellTut = tutorial->getCell(11);
-
-	SceneObject* cellTutPlayer = tutorial->getCell(1);
+		return;
+	}
 
 	player->initializePosition(0, 0, -3);
 
-	cellTutPlayer->transferObject(player, -1);
-	PlayerObject* ghost = player->getPlayerObject();
-	ghost->setSavedTerrainName(zone->getZoneName());
-	ghost->setSavedParentID(cellTutPlayer->getObjectID());
+	SceneObject* tutorialCell = tutorial->getCell(1);
+
+	if (tutorialCell == nullptr) {
+		tutorial->destroyObjectFromWorld(true);
+
+		return;
+	}
 
 	tutorial->updateToDatabase();
+
+	tutClocker.release();
+
+	uint64 cellID = tutorialCell->getObjectID();
+
+	player->switchZone("tutorial", 0, 0, -3, cellID);
 }
 
 void PlayerManagerImplementation::createSkippedTutorialBuilding(CreatureObject* player) {
 	Zone* zone = server->getZone("tutorial");
 
 	if (zone == nullptr) {
-		error("Character creation failed, tutorial zone disabled.");
+		error() << "Character creation failed, tutorial zone disabled.";
 		return;
 	}
 
-
 	Reference<BuildingObject*> tutorial = server->createObject(STRING_HASHCODE("object/building/general/newbie_hall_skipped.iff"), 1).castTo<BuildingObject*>();
+
+	if (tutorial == nullptr) {
+		error() << "Character creation failed, unable to create player skip-tutorial building.";
+		return;
+	}
 
 	Locker locker(tutorial);
 

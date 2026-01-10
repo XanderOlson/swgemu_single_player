@@ -376,7 +376,7 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 	UnicodeString bio;
 	callback->getBiography(bio);
 
-	bool doTutorial = ConfigManager::instance()->getBool("Core3.PlayerCreationManager.EnableTutorial", callback->getTutorialFlag());
+	bool doTutorial = ConfigManager::instance()->getBool("Core3.PlayerCreationManager.EnableTutorial", false) && callback->getTutorialFlag();
 
 	ManagedReference<CreatureObject*> playerCreature = zoneServer.get()->createObject(serverObjectCRC, 2).castTo<CreatureObject*>();
 
@@ -901,8 +901,7 @@ void PlayerCreationManager::addCustomization(CreatureObject* creature,
 void PlayerCreationManager::addStartingItemsInto(CreatureObject* creature,
 		SceneObject* container) const {
 
-	if (creature == nullptr || container == nullptr
-			|| !creature->isPlayerCreature()) {
+	if (creature == nullptr || container == nullptr || !creature->isPlayerCreature()) {
 		instance()->info("addStartingItemsInto: nullptr or not PlayerCreature");
 		return;
 	}
@@ -1006,7 +1005,6 @@ void PlayerCreationManager::addStartingWeaponsInto(CreatureObject* creature,
 
 	if (professionData == nullptr)
 		professionData = professionDefaultsInfo.get(0);
-
 
 	//Add common starting items.
 	for (int itemNumber = 0; itemNumber < commonStartingItems.size();

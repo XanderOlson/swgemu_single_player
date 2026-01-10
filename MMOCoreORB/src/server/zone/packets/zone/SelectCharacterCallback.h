@@ -300,6 +300,35 @@ public:
 			}
 
 			zone->transferObject(player, -1, true);
+
+			// Handle re-creating the new player tutorial, this exception will put players back into a new tutorial building.
+			if (zoneName == "tutorial") {
+				Reference<CreatureObject*> playerRef = player;
+
+				Core::getTaskManager()->scheduleTask([playerRef]() {
+					if (playerRef == nullptr) {
+						return;
+					}
+
+					auto zoneServer = playerRef->getZoneServer();
+
+					if (zoneServer == nullptr) {
+						return;
+					}
+
+					auto playerManager = zoneServer->getPlayerManager();
+
+					if (playerManager == nullptr) {
+						return;
+					}
+
+					// playerRef->info(true) << " sending player into a new tutorial";
+
+					Locker locker(playerRef);
+
+					playerManager->createTutorialBuilding(playerRef);
+				}, "ReinsertTutorialLambda", 500, zoneName.toCharArray());
+			}
 		}
 
 		// Player does not have a parent, clear the saved parent.
