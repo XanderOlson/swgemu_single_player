@@ -1061,7 +1061,7 @@ String PlayerManagerImplementation::setLastName(CreatureObject* creature, const 
 }
 
 void PlayerManagerImplementation::createTutorialBuilding(CreatureObject* player) {
-	Zone* zone = server->getZone("tutorial");
+	auto zone = server->getZone("tutorial");
 
 	if (zone == nullptr) {
 		error() << "Character creation failed, tutorial zone disabled.";
@@ -1099,55 +1099,57 @@ void PlayerManagerImplementation::createTutorialBuilding(CreatureObject* player)
 		return;
 	}
 
-	tutorial->updateToDatabase();
-
 	tutClocker.release();
+
+	auto ghost = player->getPlayerObject();
+
+	if (ghost != nullptr) {
+		ghost->setTutorialParticpant();
+	}
 
 	uint64 cellID = tutorialCell->getObjectID();
 
 	player->switchZone("tutorial", 0, 0, -3, cellID);
+
+	player->updateToDatabase();
 }
 
-void PlayerManagerImplementation::createSkippedTutorialBuilding(CreatureObject* player) {
-	Zone* zone = server->getZone("tutorial");
+void PlayerManagerImplementation::insertIntoSkippedTutorialBuilding(CreatureObject* player) {
+	auto zone = server->getZone("tutorial");
 
 	if (zone == nullptr) {
 		error() << "Character creation failed, tutorial zone disabled.";
 		return;
 	}
 
-	Reference<BuildingObject*> tutorial = server->createObject(STRING_HASHCODE("object/building/general/newbie_hall_skipped.iff"), 1).castTo<BuildingObject*>();
+	auto planetManager = zone->getPlanetManager();
 
-	if (tutorial == nullptr) {
-		error() << "Character creation failed, unable to create player skip-tutorial building.";
+	if (planetManager == nullptr) {
 		return;
 	}
 
-	Locker locker(tutorial);
+	auto skippedTutorial = planetManager->getSkippedTutorialBuilding();
 
-	tutorial->createCellObjects();
-	tutorial->initializePosition(System::random(5000), 0, System::random(5000));
-	zone->transferObject(tutorial, -1, true);
+	if (skippedTutorial == nullptr) {
+		error() << "Character creation failed, skipped tutorial building is null.";
+		return;
+	}
 
-	locker.release();
+	auto tutorialCell = skippedTutorial->getCell(1);
 
-	Reference<SceneObject*> travelTutorialTerminal = server->createObject(STRING_HASHCODE("object/tangible/terminal/terminal_travel_tutorial.iff"), 1);
+	if (tutorialCell == nullptr) {
+		error() << "Character creation failed, skipped tutorial starting cell is null.";
+		return;
+	}
 
-	SceneObject* cellTut = tutorial->getCell(1);
+	Coordinate position(27.5f, -4.2f, -159.2f);
+	position.randomizePosition(5.f, 0.5f);
 
-	Locker locker2(travelTutorialTerminal);
+	uint64 cellID = tutorialCell->getObjectID();
 
-	cellTut->transferObject(travelTutorialTerminal, -1);
+	player->switchZone("tutorial", position.getPositionX(), position.getPositionZ(), position.getPositionY(), cellID);
 
-	travelTutorialTerminal->initializePosition(27.0f, -3.5f, -168.0f);
-
-	player->initializePosition(27.0f, -3.5f, -165.0f);
-	cellTut->transferObject(player, -1);
-	PlayerObject* ghost = player->getPlayerObject();
-	ghost->setSavedTerrainName(zone->getZoneName());
-	ghost->setSavedParentID(cellTut->getObjectID());
-
-	tutorial->updateToDatabase();
+	player->updateToDatabase();
 }
 
 uint8 PlayerManagerImplementation::calculateIncapacitationTimer(CreatureObject* playerCreature, int condition) {

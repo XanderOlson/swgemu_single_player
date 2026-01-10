@@ -96,11 +96,8 @@ void PlanetManagerImplementation::initialize() {
 		sarlaccPreArea->setRadius(30.f);
 		sarlaccPreArea->initializePosition(-2085, 0, 3147);
 		zone->transferObject(sarlaccPreArea, -1, true);
-	}
-
-	if (zoneName == "tatooine") {
-		Reference<ActiveArea*> area = zone->getZoneServer()->createObject(
-				STRING_HASHCODE("object/sarlacc_area.iff"), 0).castTo<ActiveArea *>();
+	} else if (zoneName == "tatooine") {
+		Reference<ActiveArea*> area = zone->getZoneServer()->createObject(STRING_HASHCODE("object/sarlacc_area.iff"), 0).castTo<ActiveArea *>();
 
 		Locker locker(area);
 		area->setRadius(30.f);
@@ -117,6 +114,33 @@ void PlanetManagerImplementation::initialize() {
 		preArea->setRadius(60.f);
 		preArea->initializePosition(-6174, 0, -3361);
 		zone->transferObject(preArea, -1, true);
+	} else if (zoneName == "tutorial") {
+		// Create the Skipped tutorial building
+		skippedTutorial = zone->getZoneServer()->createObject(STRING_HASHCODE("object/building/general/newbie_hall_skipped.iff"), 0).castTo<BuildingObject*>();
+
+		Locker locker(skippedTutorial);
+
+		skippedTutorial->createCellObjects();
+		skippedTutorial->initializePosition(0, 400, 0);
+
+		if (zone->transferObject(skippedTutorial, -1)) {
+			Reference<SceneObject*> travelTutorialTerminal = zone->getZoneServer()->createObject(STRING_HASHCODE("object/tangible/terminal/terminal_travel_tutorial.iff"), 0);
+
+			if (travelTutorialTerminal != nullptr) {
+				Locker termClock(travelTutorialTerminal, skippedTutorial);
+
+				travelTutorialTerminal->initializePosition(27.5f, -3.5f, -167.8f);
+				travelTutorialTerminal->setCustomObjectName("Travel Terminal", false);
+
+				SceneObject* cellTut = skippedTutorial->getCell(1);
+
+				if (cellTut != nullptr) {
+					cellTut->transferObject(travelTutorialTerminal, -1);
+
+					info(true) << "Skipped Tutorial Building Created.";
+				}
+			}
+		}
 	}
 }
 

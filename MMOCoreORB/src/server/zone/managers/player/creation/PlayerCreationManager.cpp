@@ -509,13 +509,13 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 			playerManager->updatePermissionLevel(playerCreature, PermissionLevelList::instance()->getLevelNumber("admin"));
 		}
 
-		if (doTutorial)
+		if (doTutorial) {
 			playerManager->createTutorialBuilding(playerCreature);
-		else
-			playerManager->createSkippedTutorialBuilding(playerCreature);
+		} else {
+			playerManager->insertIntoSkippedTutorialBuilding(playerCreature);
+		}
 
-		ValidatedPosition* lastValidatedPosition =
-				ghost->getLastValidatedPosition();
+		ValidatedPosition* lastValidatedPosition = ghost->getLastValidatedPosition();
 		lastValidatedPosition->update(playerCreature);
 
 		ghost->setBiography(bio);

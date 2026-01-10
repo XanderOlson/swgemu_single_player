@@ -322,11 +322,19 @@ public:
 						return;
 					}
 
-					// playerRef->info(true) << " sending player into a new tutorial";
-
 					Locker locker(playerRef);
 
-					playerManager->createTutorialBuilding(playerRef);
+					auto ghost = playerRef->getPlayerObject();
+
+					if (ghost != nullptr && !ghost->isTutorialParticipant()) {
+						// playerRef->info(true) << " sending player into a skipped tutorial building";
+
+						playerManager->insertIntoSkippedTutorialBuilding(playerRef);
+					} else {
+						// playerRef->info(true) << " sending player into a new tutorial";
+
+						playerManager->createTutorialBuilding(playerRef);
+					}
 				}, "ReinsertTutorialLambda", 500, zoneName.toCharArray());
 			}
 		}

@@ -33,6 +33,7 @@ import server.zone.CloseObjectsVector;
 include engine.util.u3d.Vector3;
 include server.zone.managers.collision.IntersectionResults;
 include server.zone.objects.pathfinding.NavArea;
+include server.zone.objects.building.BuildingObject;
 
 @dirty
 class PlanetManager extends ManagedService implements Logger {
@@ -98,6 +99,8 @@ class PlanetManager extends ManagedService implements Logger {
 
 	@dereferenced
 	protected transient SynchronizedSortedVector<unsigned long> spawnedEventStructures;
+
+	protected transient BuildingObject skippedTutorial;
 
 	public PlanetManager(Zone planet, ZoneProcessServer srv) {
 		zone = planet;
@@ -452,4 +455,9 @@ class PlanetManager extends ManagedService implements Logger {
 	public native int destroyEventObject(unsigned long objectID);
 
 	public native int destroyAllEventObjects();
+
+	@read
+	public BuildingObject getSkippedTutorialBuilding() {
+		return skippedTutorial;
+	}
 }

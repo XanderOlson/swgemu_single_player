@@ -412,8 +412,11 @@ class PlayerManager extends Observer implements Logger {
 
 	public native void ejectPlayerFromBuilding(CreatureObject player);
 
+	@arg1preLocked
 	public native void createTutorialBuilding(CreatureObject player);
-	public native void createSkippedTutorialBuilding(CreatureObject player);
+
+	@arg1preLocked
+	public native void insertIntoSkippedTutorialBuilding(CreatureObject player);
 
 	@local
 	public native void updateSwimmingState(CreatureObject player, float newZ, IntersectionResults intersections = null, CloseObjectsVector closeObjects = null);
