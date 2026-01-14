@@ -46,6 +46,7 @@ RUN set -xe; \
         db5.3-util \
         dnsutils \
         doxygen \
+        default-jre \
         figlet \
         file \
         g++ \
