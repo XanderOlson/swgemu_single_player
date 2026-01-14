@@ -14,7 +14,20 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build lua5.3 liblua5.3-dev
+          sudo apt-get install -y \
+            build-essential \
+            libmariadb-dev \
+            libmariadb-dev-compat \
+            liblua5.3-dev \
+            libdb5.3-dev \
+            libssl-dev \
+            cmake \
+            git \
+            default-jre \
+            libboost-all-dev \
+            gdb \
+            ninja-build \
+            libjemalloc-dev
       - name: Run make build-ninja-debug
         run: make build-ninja-debug
         working-directory: MMOCoreORB
