@@ -13,3 +13,4 @@ jobs:
         uses: actions/checkout@v4
       - name: Run make build-ninja-debug
         run: make build-ninja-debug
+        working-directory: MMOCoreORB
