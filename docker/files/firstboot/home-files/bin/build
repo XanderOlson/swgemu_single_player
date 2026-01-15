@@ -48,7 +48,11 @@ fi
         done
 )
 
-figlet -f banner $BRANCH
+if command -v figlet >/dev/null 2>&1; then
+        figlet -f banner $BRANCH
+else
+        echo "== $BRANCH =="
+fi
 
 renice 15 -p $$
 
