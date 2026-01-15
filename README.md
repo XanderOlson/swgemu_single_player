@@ -118,6 +118,8 @@ chmod +x /tmp/llvm.sh
 clang --version
 ld.lld --version
 exit
+
+sudo apt install -y clang llvm lld
 ```
 
 This will install the latest and symlink all the files to /usr/bin so CMake finds them etc.
