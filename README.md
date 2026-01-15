@@ -147,7 +147,16 @@ This will install the latest and symlink all the files to /usr/bin so CMake find
   * Import sql database into mariadb
 
         sudo apt-get install mariadb-server
-        Setup MariaDB User, database and import sql/swgemu.sql
+        # Setup MariaDB User, database and import sql/swgemu.sql
+
+        sudo mariadb
+        CREATE DATABASE swgemu;
+        CREATE USER 'username'@'localhost' IDENTIFIED BY 'password';
+        GRANT ALL PRIVILEDGES ON swgemu.* TO 'username'@'localhost';
+        FLUSH PRIVILEGES;
+        EXIT;
+
+        mysql swgemu < sql/swgemu.sql
 
 ### How to Run
 
