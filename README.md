@@ -151,8 +151,8 @@ This will install the latest and symlink all the files to /usr/bin so CMake find
 
         sudo mariadb
         CREATE DATABASE swgemu;
-        CREATE USER 'username'@'localhost' IDENTIFIED BY 'password';
-        GRANT ALL PRIVILEDGES ON swgemu.* TO 'username'@'localhost';
+        CREATE USER 'swgemu'@'localhost' IDENTIFIED BY '123456';
+        GRANT ALL PRIVILEGES ON swgemu.* TO 'swgemu'@'localhost';
         FLUSH PRIVILEGES;
         EXIT;
 
