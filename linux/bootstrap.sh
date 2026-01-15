@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TARGET_OS='debian'
-TARGET_VERSIONS='11|12'
+TARGET_VERSIONS='11|12|13'
 
 msg() {
     echo "${COLOR_BG_GREEN}${COLOR_FG_BLACK}>> $*${COLOR_RESET}" >&2
