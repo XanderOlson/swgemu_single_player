@@ -257,11 +257,18 @@ void PlayerObjectImplementation::notifyLoadFromDatabase() {
 		if (creature != nullptr) {
 			const SkillList* list = creature->getSkillList();
 			int remainingSkillPoints = SkillManager::TOTAL_SKILL_POINTS;
+			int spentSkillPoints = 0;
 
 			for (int i = 0; i < list->size(); ++i) {
 				Skill* skill = list->get(i);
+				spentSkillPoints += skill->getSkillPointsRequired();
 				remainingSkillPoints -= skill->getSkillPointsRequired();
 			}
+
+			info(true) << "Skill points recalc: total=" << SkillManager::TOTAL_SKILL_POINTS
+			           << " spent=" << spentSkillPoints
+			           << " remaining=" << remainingSkillPoints
+			           << " stored=" << getSkillPoints();
 
 			if (getSkillPoints() != remainingSkillPoints) {
 				setSkillPoints(remainingSkillPoints);
