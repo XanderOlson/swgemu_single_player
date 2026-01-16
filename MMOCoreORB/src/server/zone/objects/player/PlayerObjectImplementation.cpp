@@ -250,6 +250,24 @@ void PlayerObjectImplementation::notifyLoadFromDatabase() {
 	}
 
 	clientLastMovementStamp = 0;
+
+	if (parent != nullptr) {
+		auto creature = parent->asCreatureObject();
+
+		if (creature != nullptr) {
+			const SkillList* list = creature->getSkillList();
+			int remainingSkillPoints = SkillManager::TOTAL_SKILL_POINTS;
+
+			for (int i = 0; i < list->size(); ++i) {
+				Skill* skill = list->get(i);
+				remainingSkillPoints -= skill->getSkillPointsRequired();
+			}
+
+			if (getSkillPoints() != remainingSkillPoints) {
+				setSkillPoints(remainingSkillPoints);
+			}
+		}
+	}
 }
 
 void PlayerObjectImplementation::unloadSpawnedChildren(bool skipShips) {
