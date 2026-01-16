@@ -683,7 +683,7 @@ int PlayerCreationManager::getMinimumAttributeLimit(const String& race,
 
 int PlayerCreationManager::getTotalAttributeLimit(const String& race) const {
 	// Server-side override to raise total stat pool for all players.
-	constexpr int kTotalAttributeLimit = 120000;
+	constexpr int kTotalAttributeLimit = 90000;
 	(void)race;
 
 	return kTotalAttributeLimit;

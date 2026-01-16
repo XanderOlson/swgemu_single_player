@@ -65,6 +65,7 @@
 #include "server/zone/managers/skill/SkillManager.h"
 #include "server/zone/objects/player/FactionStatus.h"
 #include "server/zone/managers/planet/PlanetManager.h"
+#include "server/zone/managers/player/creation/PlayerCreationManager.h"
 
 #include "server/zone/packets/trade/AbortTradeMessage.h"
 #include "server/zone/packets/trade/AcceptTransactionMessage.h"
@@ -5106,6 +5107,14 @@ void PlayerManagerImplementation::fixHAM(CreatureObject* player) {
 				++encumbranceType;
 			} else {
 				calculated -= player->getEncumbrance(encumbranceType);
+			}
+
+			if (player->isPlayerCreature()) {
+				int desiredMax = PlayerCreationManager::instance()->getMaximumAttributeLimit(
+					player->getSpeciesName(), i);
+				if (desiredMax > 0) {
+					calculated = desiredMax;
+				}
 			}
 
 			//info("attribute: " + CreatureAttribute::getName(i, true) + " max = " + String::valueOf(max) + " calculatedMax = " + String::valueOf(calculated), true);
