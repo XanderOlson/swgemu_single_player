@@ -255,7 +255,7 @@ void CreatureObjectImplementation::loadTemplateData(SharedObjectTemplate* templa
 	const auto& speedTempl = creoData->getSpeed();
 
 	if (speedTempl.size() > 0) {
-		runSpeed = speedTempl.get(0);
+		runSpeed = isPlayerCreature() ? (speedTempl.get(0) * 2.0f) : speedTempl.get(0);
 		walkSpeed = speedTempl.get(1);
 	} else {
 		runSpeed = 0;
@@ -665,7 +665,7 @@ void CreatureObjectImplementation::addMountedCombatSlow() {
 
 		if (playerTemplate != nullptr) {
 			const Vector<FloatParam>& speedTempl = playerTemplate->getSpeed();
-			newSpeed = speedTempl.get(0);
+			newSpeed = speedTempl.get(0) * 2.0f;
 		}
 
 		float oldSpeed = 1;
