@@ -114,6 +114,8 @@ void SkillManager::loadClientData() {
 		}
 	}
 
+	info() << "Total skill points cap in effect: " << TOTAL_SKILL_POINTS;
+
 	// Load Droid Commands
 	iffStream = TemplateManager::instance()->openIffFile("datatables/space_command/droid_program_size.iff");
 
