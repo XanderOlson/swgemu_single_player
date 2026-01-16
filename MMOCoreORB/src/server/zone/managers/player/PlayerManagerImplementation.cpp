@@ -2631,7 +2631,8 @@ int PlayerManagerImplementation::awardExperience(CreatureObject* player, const S
 
 		xp = playerObject->addExperience(trx, xpType, (int) (amount * speciesModifier * buffMultiplier * localMultiplier * globalExpMultiplier));
 	} else {
-		xp = playerObject->addExperience(trx, xpType, (int)amount);
+		trx.addState("globalExpMultiplier", globalExpMultiplier);
+		xp = playerObject->addExperience(trx, xpType, (int) (amount * globalExpMultiplier));
 	}
 
 	player->notifyObservers(ObserverEventType::XPAWARDED, player, xp);
