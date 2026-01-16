@@ -57,7 +57,7 @@ class SkillManager : public Singleton<SkillManager>, public Logger, public Objec
 	bool apprenticeshipEnabled;
 
 public:
-	static int TOTAL_SKILL_POINTS;
+	static const int TOTAL_SKILL_POINTS = 5000;
 	SkillManager();
 	~SkillManager();
 

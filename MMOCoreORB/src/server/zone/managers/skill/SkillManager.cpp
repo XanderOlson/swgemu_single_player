@@ -24,8 +24,6 @@
 #include "server/zone/objects/player/sui/callbacks/SurrenderPilotSuiCallback.h"
 #include "templates/faction/Factions.h"
 
-int SkillManager::TOTAL_SKILL_POINTS = 250;
-
 SkillManager::SkillManager()
 	: Logger("SkillManager") {
 
@@ -62,10 +60,6 @@ void SkillManager::loadLuaConfig() {
 	lua->runFile("scripts/managers/skill_manager.lua");
 
 	apprenticeshipEnabled = lua->getGlobalByte("apprenticeshipEnabled");
-	const int totalSkillPoints = lua->getGlobalInt("totalSkillPoints");
-	if (totalSkillPoints > 0) {
-		TOTAL_SKILL_POINTS = totalSkillPoints;
-	}
 
 	delete lua;
 	lua = nullptr;
