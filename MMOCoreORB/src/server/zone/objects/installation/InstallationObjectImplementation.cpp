@@ -737,7 +737,7 @@ float InstallationObjectImplementation::getActualRate() {
 	if (resourceHopper.size() == 0)
 		return 0;
 
-	return extractionRate * spawnDensity;
+	return extractionRate * spawnDensity * 1000;
 }
 
 void InstallationObjectImplementation::setExtractionRate(float rate){

@@ -39,6 +39,10 @@
 #include "server/zone/objects/intangible/TheaterObject.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
 
+namespace {
+constexpr int kHarvestMultiplier = 1000;
+}
+
 Mutex CreatureManagerImplementation::loadMutex;
 
 void CreatureManagerImplementation::setCreatureTemplateManager() {
@@ -844,6 +848,7 @@ void CreatureManagerImplementation::droidHarvest(Creature* creature, CreatureObj
 	int droidBonus = DroidMechanics::determineDroidSkillBonus(ownerSkill,harvestBonus,quantityExtracted);
 
 	quantityExtracted += droidBonus;
+	quantityExtracted *= kHarvestMultiplier;
 	// add to droid inventory if there is space available, otherwise to player
 	DroidObject* pet = cast<DroidObject*>(droid);
 
@@ -1011,6 +1016,8 @@ void CreatureManagerImplementation::harvest(Creature* creature, CreatureObject* 
 
 	if (creature->getParent().get() != nullptr)
 		quantityExtracted = 1;
+
+	quantityExtracted *= kHarvestMultiplier;
 
 	TransactionLog trx(TrxCode::HARVESTED, player, resourceSpawn);
 	resourceManager->harvestResourceToPlayer(trx, player, resourceSpawn, quantityExtracted);
