@@ -42,7 +42,7 @@
 
 
 object_tangible_inventory_character_inventory = object_tangible_inventory_shared_character_inventory:new {
-
+	containerVolumeLimit = 10000,
 }
 
 ObjectTemplates:addTemplate(object_tangible_inventory_character_inventory, "object/tangible/inventory/character_inventory.iff")
