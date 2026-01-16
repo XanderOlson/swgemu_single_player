@@ -66,6 +66,7 @@ void SkillManager::loadLuaConfig() {
 	if (totalSkillPoints > 0) {
 		TOTAL_SKILL_POINTS = totalSkillPoints;
 	}
+	info() << "Configured total skill points: " << TOTAL_SKILL_POINTS;
 
 	delete lua;
 	lua = nullptr;
