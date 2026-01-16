@@ -195,7 +195,7 @@ class InstallationObject extends StructureObject {
 
 	@read
 	public float getExtractionRate() {
-		return extractionRate;
+		return extractionRate * 1000;
 	}
 
 	@read
