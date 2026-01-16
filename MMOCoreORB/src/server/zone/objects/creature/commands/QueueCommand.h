@@ -52,6 +52,8 @@ protected:
 public:
 	QueueCommand(const String& skillname, ZoneProcessServer* serv);
 
+	const static int GLOBAL_XP_MULTIPLIER = 1000;
+
 	const static int NOCOMBATQUEUE = -1;
 	const static int IMMEDIATE = 0;
 	const static int FRONT = 1;
@@ -125,6 +127,10 @@ public:
 
 	inline bool checkDistance(SceneObject* source, SceneObject* target, float range) const {
 		return (source->getWorldPosition().distanceTo(target->getWorldPosition()) - source->getTemplateRadius() - target->getTemplateRadius() <= range);
+	}
+
+	inline int getExperienceAwardAmount(const String& type, int power) const {
+		return (int) round((float) power * (float) GLOBAL_XP_MULTIPLIER);
 	}
 
 	/*

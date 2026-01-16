@@ -248,7 +248,8 @@ public:
 
 		CreatureObject* player = cast<CreatureObject*>(creature);
 
-		int amount = (int)round((float)power * 0.25f);
+		int baseAmount = (int)round((float)power * 0.25f);
+		int amount = getExperienceAwardAmount(type, baseAmount);
 
 		if (amount <= 0)
 			return;
