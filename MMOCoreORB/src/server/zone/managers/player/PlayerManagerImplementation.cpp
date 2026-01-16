@@ -8,6 +8,7 @@
 #include "server/zone/managers/player/PlayerManager.h"
 #include <utility>
 #include <mutex>
+#include <cmath>
 
 #ifdef WITH_SWGREALMS_API
 #include "server/login/SWGRealmsAPI.h"
@@ -49,6 +50,7 @@
 #include "server/zone/objects/tangible/wearables/ArmorObject.h"
 #include "server/zone/objects/tangible/weapon/WeaponObject.h"
 #include "server/zone/objects/tangible/wearables/WearableObject.h"
+#include "templates/creature/SharedCreatureObjectTemplate.h"
 
 #include "server/zone/objects/player/events/PlayerIncapacitationRecoverTask.h"
 #include "server/zone/objects/creature/events/ProposeUnityExpiredTask.h"
@@ -4029,6 +4031,22 @@ bool PlayerManagerImplementation::checkPlayerSpeedTest(CreatureObject* player, S
 
 			if (petManager != nullptr) {
 				allowedSpeedBase = petManager->getMountedRunSpeed(mount);
+			}
+		}
+	}
+
+	if (parent == nullptr && player->isPlayerCreature()) {
+		auto playerTemplate = dynamic_cast<SharedCreatureObjectTemplate*>(player->getObjectTemplate());
+
+		if (playerTemplate != nullptr) {
+			const Vector<FloatParam>& speedTempl = playerTemplate->getSpeed();
+
+			if (speedTempl.size() > 0) {
+				float templateRunSpeed = speedTempl.get(0);
+
+				if (std::fabs(allowedSpeedBase - templateRunSpeed) < 0.001f) {
+					allowedSpeedBase *= 2.0f;
+				}
 			}
 		}
 	}
