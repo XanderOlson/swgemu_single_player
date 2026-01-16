@@ -37,6 +37,10 @@
 #include "server/zone/objects/building/BuildingObject.h"
 #include "server/zone/managers/director/DirectorManager.h"
 
+namespace {
+	constexpr float kMissionRewardMultiplier = 1000.0f;
+}
+
 void MissionManagerImplementation::loadLuaSettings() {
 	try {
 		Lua* lua = new Lua();
@@ -637,6 +641,7 @@ void MissionManagerImplementation::randomizeGeneralTerminalMissions(CreatureObje
 
 		float cityBonus = 1.f + player->getSkillMod("private_spec_missions") / 100.f;
 		mission->setRewardCredits(mission->getRewardCredits() * cityBonus);
+		mission->setRewardCredits(mission->getRewardCredits() * kMissionRewardMultiplier);
 
 		mission->setRefreshCounter(counter, true);
 	}
@@ -666,6 +671,7 @@ void MissionManagerImplementation::randomizeArtisanTerminalMissions(CreatureObje
 
 		float cityBonus = 1.f + player->getSkillMod("private_spec_missions") / 100.f;
 		mission->setRewardCredits(mission->getRewardCredits() * cityBonus);
+		mission->setRewardCredits(mission->getRewardCredits() * kMissionRewardMultiplier);
 
 		mission->setRefreshCounter(counter, true);
 	}
@@ -695,6 +701,7 @@ void MissionManagerImplementation::randomizeEntertainerTerminalMissions(Creature
 
 		float cityBonus = 1.f + player->getSkillMod("private_spec_missions") / 100.f;
 		mission->setRewardCredits(mission->getRewardCredits() * cityBonus);
+		mission->setRewardCredits(mission->getRewardCredits() * kMissionRewardMultiplier);
 
 		mission->setRefreshCounter(counter, true);
 	}
@@ -724,6 +731,7 @@ void MissionManagerImplementation::randomizeScoutTerminalMissions(CreatureObject
 
 		float cityBonus = 1.f + player->getSkillMod("private_spec_missions") / 100.f;
 		mission->setRewardCredits(mission->getRewardCredits() * cityBonus);
+		mission->setRewardCredits(mission->getRewardCredits() * kMissionRewardMultiplier);
 
 		mission->setRefreshCounter(counter, true);
 	}
@@ -749,6 +757,7 @@ void MissionManagerImplementation::randomizeBountyTerminalMissions(CreatureObjec
 
 		float cityBonus = 1.f + player->getSkillMod("private_spec_missions") / 100.f;
 		mission->setRewardCredits(mission->getRewardCredits() * cityBonus);
+		mission->setRewardCredits(mission->getRewardCredits() * kMissionRewardMultiplier);
 
 		mission->setRefreshCounter(counter, true);
 	}
@@ -797,6 +806,7 @@ void MissionManagerImplementation::randomizeFactionTerminalMissions(CreatureObje
 
 		float cityBonus = 1.f + player->getSkillMod("private_spec_missions") / 100.f;
 		mission->setRewardCredits(mission->getRewardCredits() * cityBonus);
+		mission->setRewardCredits(mission->getRewardCredits() * kMissionRewardMultiplier);
 
 		mission->setRefreshCounter(counter, true);
 	}
