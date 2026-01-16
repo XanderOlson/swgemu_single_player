@@ -635,6 +635,16 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 
 int PlayerCreationManager::getMaximumAttributeLimit(const String& race,
 		int attributeNumber) const {
+	// Server-side override to raise stat caps for all players.
+	constexpr int kMaxAttributeLimit = 10000;
+	(void)race;
+
+	if (attributeNumber < 0 || attributeNumber > 8) {
+		attributeNumber = 0;
+	}
+
+	return kMaxAttributeLimit;
+
 	String maleRace = race + "_male";
 
 	if (attributeNumber < 0 || attributeNumber > 8) {
@@ -672,6 +682,12 @@ int PlayerCreationManager::getMinimumAttributeLimit(const String& race,
 }
 
 int PlayerCreationManager::getTotalAttributeLimit(const String& race) const {
+	// Server-side override to raise total stat pool for all players.
+	constexpr int kTotalAttributeLimit = 120000;
+	(void)race;
+
+	return kTotalAttributeLimit;
+
 	String maleRace = race + "_male";
 
 	Reference<RacialCreationData*> racialData = racialCreationData.get(
