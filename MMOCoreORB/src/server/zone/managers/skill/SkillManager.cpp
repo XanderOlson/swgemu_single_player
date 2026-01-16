@@ -24,7 +24,7 @@
 #include "server/zone/objects/player/sui/callbacks/SurrenderPilotSuiCallback.h"
 #include "templates/faction/Factions.h"
 
-int SkillManager::TOTAL_SKILL_POINTS = 250;
+int SkillManager::TOTAL_SKILL_POINTS = 5000;
 
 SkillManager::SkillManager()
 	: Logger("SkillManager") {
@@ -66,7 +66,7 @@ void SkillManager::loadLuaConfig() {
 	if (totalSkillPoints > 0) {
 		TOTAL_SKILL_POINTS = totalSkillPoints;
 	}
-	info() << "Configured total skill points: " << TOTAL_SKILL_POINTS;
+	info(true) << "Configured total skill points: " << TOTAL_SKILL_POINTS;
 
 	delete lua;
 	lua = nullptr;
@@ -114,7 +114,7 @@ void SkillManager::loadClientData() {
 		}
 	}
 
-	info() << "Total skill points cap in effect: " << TOTAL_SKILL_POINTS;
+	info(true) << "Total skill points cap in effect: " << TOTAL_SKILL_POINTS;
 
 	// Load Droid Commands
 	iffStream = TemplateManager::instance()->openIffFile("datatables/space_command/droid_program_size.iff");
@@ -170,6 +170,7 @@ void SkillManager::loadClientData() {
 	loadXpLimits();
 
 	info(true) << "Loaded " << skillMap.size() << " skills and " << abilityMap.size() << " abilities.";
+	info(true) << "HERE BE DRAGONS";
 	info(true) << "Loaded " << droidProgramSizes.size() << " Droid Space Command Sizes.";
 }
 
