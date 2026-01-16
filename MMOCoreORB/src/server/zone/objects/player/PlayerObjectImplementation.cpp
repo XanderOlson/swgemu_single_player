@@ -258,7 +258,7 @@ void PlayerObjectImplementation::notifyLoadFromDatabase() {
 			const SkillList* list = creature->getSkillList();
 			int remainingSkillPoints = SkillManager::TOTAL_SKILL_POINTS;
 			int spentSkillPoints = 0;
-			bool logSkillDetails = creature->getDisplayedName() == "Xandini";
+			bool logSkillDetails = true;
 
 			for (int i = 0; i < list->size(); ++i) {
 				Skill* skill = list->get(i);
@@ -277,7 +277,8 @@ void PlayerObjectImplementation::notifyLoadFromDatabase() {
 			           << " stored=" << getSkillPoints();
 
 			if (logSkillDetails) {
-				info(true) << "Skill points spent total for Xandini: " << spentSkillPoints;
+				info(true) << "Skill points spent total for " << creature->getDisplayedName()
+				           << ": " << spentSkillPoints;
 			}
 
 			if (getSkillPoints() != remainingSkillPoints) {
