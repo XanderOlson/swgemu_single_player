@@ -186,6 +186,9 @@ void SceneObjectImplementation::loadTemplateData(SharedObjectTemplate* templateD
 	clientObjectCRC = templateData->getClientObjectCRC();
 	containerType = templateData->getContainerType();
 	containerVolumeLimit = templateData->getContainerVolumeLimit();
+	if (templateData->getTemplateFileName() == "object/tangible/inventory/character_inventory.iff") {
+		containerVolumeLimit = 10000;
+	}
 
 	if (templateData->getCollisionActionBlockFlags() == 255) { //loading meshes for line of sight
 		templateData->getPortalLayout();
