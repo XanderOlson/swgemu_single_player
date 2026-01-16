@@ -2337,7 +2337,7 @@ void CreatureObjectImplementation::notifyLoadFromDatabase() {
 	auto skillManager = SkillManager::instance();
 	const SkillList* playerSkillList = getSkillList();
 
-	int totalSkillPointsWasted = 250;
+	int totalSkillPointsWasted = SkillManager::TOTAL_SKILL_POINTS;
 
 	for (int i = 0; i < playerSkillList->size(); ++i) {
 		Skill* skill = playerSkillList->get(i);
