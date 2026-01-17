@@ -1822,7 +1822,7 @@ void PlayerObjectImplementation::notifyOnline() {
 		if (playerTemplate != nullptr) {
 			auto speedTempl = playerTemplate->getSpeed();
 			// Triple movement speed for testing. TODO: Remove this.
-			playerCreature->setRunSpeed(speedTempl.get(0) * 3.0f);
+			playerCreature->setRunSpeed(speedTempl.get(0) * 4.0f);
 		}
 	}
 
