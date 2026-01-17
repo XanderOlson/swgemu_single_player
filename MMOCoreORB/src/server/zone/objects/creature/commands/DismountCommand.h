@@ -229,9 +229,14 @@ public:
 		}
 
 		const uint32 vehicleSpeedBoostCRC = STRING_HASHCODE("vehicle_speed_boost");
+		const uint32 riderSpeedBoostCRC = STRING_HASHCODE("vehicle_speed_boost_rider");
 
 		if (vehicle->hasBuff(vehicleSpeedBoostCRC)) {
 			vehicle->removeBuff(vehicleSpeedBoostCRC);
+		}
+
+		if (creature->hasBuff(riderSpeedBoostCRC)) {
+			creature->removeBuff(riderSpeedBoostCRC);
 		}
 
 		// Store Jetpack

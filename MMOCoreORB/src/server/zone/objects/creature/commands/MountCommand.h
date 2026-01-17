@@ -8,6 +8,7 @@
 #include "server/zone/objects/scene/SceneObject.h"
 #include "server/zone/managers/objectcontroller/ObjectController.h"
 #include "server/zone/objects/creature/buffs/PlayerVehicleBuff.h"
+#include "server/zone/objects/creature/buffs/PrivateSkillMultiplierBuff.h"
 #include "server/zone/objects/creature/buffs/BuffType.h"
 #include "templates/params/creature/PlayerArrangement.h"
 
@@ -160,6 +161,7 @@ public:
 		}
 
 		const uint32 vehicleSpeedBoostCRC = STRING_HASHCODE("vehicle_speed_boost");
+		const uint32 riderSpeedBoostCRC = STRING_HASHCODE("vehicle_speed_boost_rider");
 
 		Logger::console.info(true) << "MountCommand: vehicle flags isVehicleObject=" << (vehicle->isVehicleObject() ? "true" : "false")
 			<< " isMount=" << (vehicle->isMount() ? "true" : "false")
@@ -178,6 +180,17 @@ public:
 
 			Logger::console.info(true) << "Applying vehicle speed boost buff (4.0x) to " << vehicle->getObjectTemplate()->getFullTemplateString()
 				<< " baseRunSpeed=" << vehicle->getRunSpeed();
+		}
+
+		if (!creature->hasBuff(riderSpeedBoostCRC)) {
+			ManagedReference<PrivateSkillMultiplierBuff*> riderBuff = new PrivateSkillMultiplierBuff(creature, riderSpeedBoostCRC, 604800, BuffType::OTHER);
+
+			Locker blocker(riderBuff, creature);
+
+			riderBuff->setSpeedMultiplierMod(4.0f);
+			riderBuff->setAccelerationMultiplierMod(4.0f);
+
+			creature->addBuff(riderBuff);
 		}
 
 		// get vehicle speed
