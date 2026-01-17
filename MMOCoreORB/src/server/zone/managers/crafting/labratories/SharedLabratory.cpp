@@ -4,6 +4,7 @@
 
 #include "SharedLabratory.h"
 #include "server/zone/managers/crafting/CraftingManager.h"
+#include "server/zone/managers/crafting/CraftingManagerConfig.h"
 #include "server/zone/objects/tangible/misc/CustomIngredient.h"
 #include "server/zone/objects/manufactureschematic/ingredientslots/ComponentSlot.h"
 #include "server/zone/objects/manufactureschematic/ingredientslots/ResourceSlot.h"
@@ -141,6 +142,9 @@ float SharedLabratory::getWeightedValue(ManufactureSchematic* manufactureSchemat
 	return weightedAverage;
 }
 int SharedLabratory::calculateAssemblySuccess(CreatureObject* player,DraftSchematic* draftSchematic, float effectiveness){
+	if (isCraftingAmazingSuccessForced()) {
+		return CraftingManager::AMAZINGSUCCESS;
+	}
 	// assemblyPoints is 0-12
 	/// City bonus should be 10
 	float cityBonus = player->getSkillMod("private_spec_assembly");
@@ -206,4 +210,3 @@ int SharedLabratory::calculateAssemblySuccess(CreatureObject* player,DraftSchema
 
 	return CraftingManager::BARELYSUCCESSFUL;
 }
-

@@ -7,11 +7,37 @@
 #include "server/zone/managers/crafting/labratories/ResourceLabratory.h"
 #include "server/zone/managers/crafting/labratories/GeneticLabratory.h"
 #include "server/zone/managers/crafting/labratories/DroidLabratory.h"
+#include "server/zone/managers/crafting/CraftingManagerConfig.h"
+
+namespace {
+	bool forceAmazingSuccess = true;
+
+	bool loadCraftingManagerConfig() {
+		Reference<Lua*> lua = new Lua();
+		lua->init();
+
+		if (!lua->runFile("scripts/managers/crafting/crafting_manager.lua")) {
+			return false;
+		}
+
+		forceAmazingSuccess = lua->getGlobalBoolean("forceAmazingSuccess");
+		return true;
+	}
+}
+
+bool isCraftingAmazingSuccessForced() {
+	return forceAmazingSuccess;
+}
 
 void CraftingManagerImplementation::initialize() {
 	schematicMap = SchematicMap::instance();
 	schematicMap->initialize(zoneServer.get());
 	configureLabratories();
+
+	if (!loadCraftingManagerConfig()) {
+		forceAmazingSuccess = true;
+		info(true) << "Failed to load crafting manager config, defaulting forceAmazingSuccess to true.";
+	}
 }
 
 void CraftingManagerImplementation::stop() {
@@ -62,6 +88,9 @@ int CraftingManagerImplementation::getCreationCount(ManufactureSchematic* manufa
 
 int CraftingManagerImplementation::calculateExperimentationSuccess(CreatureObject* player,
 		DraftSchematic* draftSchematic, float effectiveness) {
+	if (isCraftingAmazingSuccessForced()) {
+		return AMAZINGSUCCESS;
+	}
 
 	float cityBonus = player->getSkillMod("private_spec_experimentation");
 
