@@ -1817,7 +1817,7 @@ void PlayerObjectImplementation::notifyOnline() {
 
 	// Set speed if player isn't mounted.
 	if (!playerCreature->isRidingMount())
-	{/crafting/labratories/ResourceLabratory.cpp
+	{
 		auto playerTemplate = dynamic_cast<SharedCreatureObjectTemplate*>(playerCreature->getObjectTemplate());
 
 		if (playerTemplate != nullptr) {
