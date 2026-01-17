@@ -116,8 +116,10 @@ public:
 			return GENERALERROR;
 		}
 
+		Logger::console.info(true) << "MountCommand: transferObject success";
 		creature->synchronizeCloseObjects();
 		creature->setState(CreatureState::RIDINGMOUNT);
+		Logger::console.info(true) << "MountCommand: rider state set";
 
 		creature->updateCooldownTimer("mount_dismount", 2000);
 
@@ -158,6 +160,10 @@ public:
 		}
 
 		const uint32 vehicleSpeedBoostCRC = STRING_HASHCODE("vehicle_speed_boost");
+
+		Logger::console.info(true) << "MountCommand: vehicle flags isVehicleObject=" << (vehicle->isVehicleObject() ? "true" : "false")
+			<< " isMount=" << (vehicle->isMount() ? "true" : "false")
+			<< " hasVehicleSpeedBoost=" << (vehicle->hasBuff(vehicleSpeedBoostCRC) ? "true" : "false");
 
 		if (vehicle->isVehicleObject() && !vehicle->hasBuff(vehicleSpeedBoostCRC)) {
 			Logger::console.info(true) << "MountCommand: applying vehicle speed boost";
