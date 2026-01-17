@@ -108,9 +108,10 @@ bool ResourceManagerImplementation::loadConfigData() {
 	int spawnThrottling = lua->getGlobalInt("spawnThrottling");
 	int lowerGateOverride = lua->getGlobalInt("lowerGateOverride");
 	int maxSpawnQuantity = lua->getGlobalInt("maxSpawnQuantity");
+	bool forceMaxResourceStats = lua->getGlobalInt("forceMaxResourceStats") > 0;
 
 	resourceSpawner->setSpawningParameters(loadFromScript, aveduration,
-			spawnThrottling, lowerGateOverride, maxSpawnQuantity);
+			spawnThrottling, lowerGateOverride, maxSpawnQuantity, forceMaxResourceStats);
 
 	String jtlResources = lua->getGlobalString("jtlresources");
 
@@ -159,7 +160,7 @@ void ResourceManagerImplementation::loadDefaultConfig() {
 	resourceSpawner->addZone("endor");
 
 	shiftInterval = 7200000;
-	resourceSpawner->setSpawningParameters(1, 86400, 90, 1000, 0);
+	resourceSpawner->setSpawningParameters(1, 86400, 90, 1000, 0, false);
 }
 
 void ResourceManagerImplementation::stop() {
