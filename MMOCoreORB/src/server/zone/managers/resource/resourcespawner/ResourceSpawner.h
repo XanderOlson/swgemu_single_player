@@ -68,6 +68,7 @@ private:
 	ManualPool* manualPool;
 
 	bool scriptLoading;
+	bool forceMaxResourceStats;
 
 	int shiftDuration, lowerGateOverride, maxSpawnAmount, spawnThrottling;
 
@@ -89,7 +90,7 @@ public:
 	void removeZone(const String& zoneName);
 	void addJtlResource(const String& resourceName);
 	void setSpawningParameters(bool loadFromScript, const int dur, const int throt,
-			const int override, const int spawnquantity);
+			const int override, const int spawnquantity, bool forceMaxStats);
 
 	void spawnScriptResources();
 	bool writeAllSpawnsToScript();

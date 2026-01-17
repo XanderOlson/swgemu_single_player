@@ -62,6 +62,13 @@ void WearableObjectImplementation::generateSockets(CraftingValues* craftingValue
 		return;
 	}
 
+	if (isArmorObject()) {
+		usedSocketCount = 0;
+		socketCount = MAXSOCKETS;
+		socketsGenerated = true;
+		return;
+	}
+
 	int skill = 0;
 	int luck = 0;
 
@@ -251,4 +258,3 @@ String WearableObjectImplementation::repairAttempt(int repairChance) {
 
 	return message;
 }
-

@@ -788,7 +788,8 @@ int PlayerObjectImplementation::addExperience(TransactionLog& trx, const String&
 	int xpCap = -1;
 
 	if (xpTypeCapList.contains(xpType))
-		xpCap = xpTypeCapList.get(xpType);
+		// Hardcoding a new cap for testing
+		xpCap = xpTypeCapList.get(xpType) + 1000000;
 
 	if (xpType.beginsWith("prestige_")) {
 		xpCap = INT_MAX;
@@ -1816,13 +1817,13 @@ void PlayerObjectImplementation::notifyOnline() {
 
 	// Set speed if player isn't mounted.
 	if (!playerCreature->isRidingMount())
-	{
+	{/crafting/labratories/ResourceLabratory.cpp
 		auto playerTemplate = dynamic_cast<SharedCreatureObjectTemplate*>(playerCreature->getObjectTemplate());
 
 		if (playerTemplate != nullptr) {
 			auto speedTempl = playerTemplate->getSpeed();
 			// Triple movement speed for testing. TODO: Remove this.
-			playerCreature->setRunSpeed(speedTempl.get(0) * 3.0f);
+			playerCreature->setRunSpeed(speedTempl.get(0) * 4.0f);
 		}
 	}
 

@@ -31,6 +31,7 @@ ResourceSpawner::ResourceSpawner(ManagedReference<ZoneServer*> serv,
 	resourceMap = nullptr;
 	maxSpawnAmount = 0;
 	scriptLoading = false;
+	forceMaxResourceStats = false;
 	shiftDuration = 0;
 	spawnThrottling = 0;
 
@@ -101,12 +102,13 @@ void ResourceSpawner::addJtlResource(const String& resourceName) {
 }
 
 void ResourceSpawner::setSpawningParameters(bool loadFromScript, const int dur, const int throt,
-		const int override, const int spawnquantity) {
+		const int override, const int spawnquantity, bool forceMaxStats) {
 
 	scriptLoading = loadFromScript;
 	shiftDuration = dur;
 	lowerGateOverride = override;
 	maxSpawnAmount = spawnquantity;
+	forceMaxResourceStats = forceMaxStats;
 
 	spawnThrottling = throt;
 
@@ -597,6 +599,9 @@ String ResourceSpawner::makeResourceName(const String& randomNameClass) {
 int ResourceSpawner::randomizeValue(int min, int max) {
 	if (min == 0 && max == 0)
 		return 0;
+
+	if (forceMaxResourceStats)
+		return max;
 
 	if (min > lowerGateOverride)
 		min = lowerGateOverride;
