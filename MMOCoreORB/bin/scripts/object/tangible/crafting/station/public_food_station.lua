@@ -70,7 +70,6 @@ object_tangible_crafting_station_public_food_station = object_tangible_crafting_
 
    stationType = 2,
    complexityLevel = 100
-   complexityLevel = 25
 }
 
 ObjectTemplates:addTemplate(object_tangible_crafting_station_public_food_station, "object/tangible/crafting/station/public_food_station.iff")
