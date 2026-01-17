@@ -220,6 +220,12 @@ public:
 			removeMountBuffs(vehicle);
 		}
 
+		const uint32 vehicleSpeedBoostCRC = STRING_HASHCODE("vehicle_speed_boost");
+
+		if (vehicle->hasBuff(vehicleSpeedBoostCRC)) {
+			vehicle->removeBuff(vehicleSpeedBoostCRC);
+		}
+
 		// Store Jetpack
 		ManagedReference<ControlDevice*> device = vehicle->getControlDevice().get();
 
