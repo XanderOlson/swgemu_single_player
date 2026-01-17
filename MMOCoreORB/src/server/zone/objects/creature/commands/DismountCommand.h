@@ -94,8 +94,16 @@ public:
 
 		changeBuffer->add(SpeedModChange(creature->getRunSpeed()));
 
- 		// Reset Force Sensitive control mods to default.
+		// Reset Force Sensitive control mods to default.
 		creature->updateSpeedAndAccelerationMods();
+
+		// Restore base run speed after dismount.
+		auto speedTempl = playerTemplate->getSpeed();
+		if (speedTempl.size() > 0) {
+			float baseRunSpeed = speedTempl.get(0);
+			float restoredRunSpeed = creature->isPlayerCreature() ? (baseRunSpeed * 4.0f) : baseRunSpeed;
+			creature->setRunSpeed(restoredRunSpeed, true);
+		}
 
 		// Update players stats in the database
 		creature->updateToDatabase();
