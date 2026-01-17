@@ -40,6 +40,8 @@
 --this exception also makes it possible to release a modified version
 --which carries forward this exception.
 
+-- luacheck: globals ServerEventAutomation
+
 --[[
 --
 -- This file is ran by scripts/screenplays/events/ServerEventAutomation.lua
