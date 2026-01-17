@@ -1056,7 +1056,7 @@ void EntertainingSessionImplementation::awardEntertainerExperience() {
 				}
 			}
 
-			int xpAmount = Math::max(1, performance->getBaseXp() + flourishXp);
+			int xpAmount = Math::max(100, performance->getBaseXp() + flourishXp);
 
 			int audienceSize = Math::min(getBandAudienceSize(), 50);
 			float audienceMod = audienceSize / 50.f;
