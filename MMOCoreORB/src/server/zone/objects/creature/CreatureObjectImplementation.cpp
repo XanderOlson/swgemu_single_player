@@ -256,22 +256,8 @@ void CreatureObjectImplementation::loadTemplateData(SharedObjectTemplate* templa
 
 	if (speedTempl.size() > 0) {
 		const float baseRunSpeed = speedTempl.get(0);
-		float adjustedRunSpeed = baseRunSpeed;
-		float adjustedWalkSpeed = speedTempl.get(1);
-
-		if (isPlayerCreature()) {
-			adjustedRunSpeed = baseRunSpeed * 3.0f;
-		} else if (isVehicleObject()) {
-			const String& templateName = creoData->getFullTemplateString();
-
-			if (templateName.contains("speederbike")) {
-				adjustedRunSpeed *= 2.0f;
-				adjustedWalkSpeed *= 2.0f;
-			}
-		}
-
-		runSpeed = adjustedRunSpeed;
-		walkSpeed = adjustedWalkSpeed;
+		runSpeed = isPlayerCreature() ? (baseRunSpeed * 3.0f) : baseRunSpeed;
+		walkSpeed = speedTempl.get(1);
 	} else {
 		runSpeed = 0;
 		walkSpeed = 0;
