@@ -199,6 +199,9 @@ public:
 			newSpeed *= vehicle->getSpeedMultiplierMod();
 		}
 
+		// Apply mounted run speed to the rider so the client movement updates.
+		creature->setRunSpeed(newSpeed, true);
+
 		// Speed hack buffer
 		SpeedMultiplierModChanges* changeBuffer = creature->getSpeedMultiplierModChanges();
 		const int bufferSize = changeBuffer->size();
