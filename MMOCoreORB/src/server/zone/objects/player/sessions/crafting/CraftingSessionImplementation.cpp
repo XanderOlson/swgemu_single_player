@@ -34,7 +34,7 @@
 // #define DEBUG_EXPERIMENTATION
 
 namespace {
-constexpr float kWeaponKraytDamageBonus = 10000.0f;
+constexpr float kWeaponKraytDamageBonus = 100000.0f;
 constexpr float kWeaponKraytAttackSpeedBonus = -2.0f;
 
 void applyWeaponKraytBonus(CraftingValues* values) {
