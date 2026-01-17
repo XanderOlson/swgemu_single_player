@@ -3,6 +3,7 @@
 #include "server/zone/objects/creature/buffs/PlayerVehicleBuff.h"
 
 #include "server/zone/objects/creature/CreatureObject.h"
+#include "server/zone/packets/creature/CreatureObjectDeltaMessage4.h"
 
 #include "server/zone/managers/creature/PetManager.h"
 #include "server/zone/ZoneServer.h"
@@ -92,6 +93,12 @@ void PlayerVehicleBuffImplementation::updateRiderSpeeds() {
 
 		// Update Vehicles Speed
 		vehicle->setRunSpeed(newSpeed);
+		auto dcreo4 = new CreatureObjectDeltaMessage4(vehicle);
+		if (dcreo4 != nullptr) {
+			dcreo4->updateRunSpeed();
+			dcreo4->close();
+			vehicle->broadcastMessage(dcreo4, true);
+		}
 		vehicle->info(true) << "Vehicle speed buff update for " << vehicle->getObjectTemplate()->getFullTemplateString()
 			<< " speedMultiplier=" << vehicle->getSpeedMultiplierMod() << " runSpeed=" << newSpeed;
 
