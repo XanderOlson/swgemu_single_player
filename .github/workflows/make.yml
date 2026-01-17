@@ -31,3 +31,15 @@ jobs:
       - name: Run make build-ninja-debug
         run: make build-ninja-debug
         working-directory: MMOCoreORB
+  lua-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install luacheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y luarocks
+          sudo luarocks install luacheck
+      - name: Run luacheck
+        run: git ls-files '*.lua' | xargs -r luacheck

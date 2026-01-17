@@ -147,8 +147,6 @@ public:
 		const uint32 vehicleSpeedBoostCRC = STRING_HASHCODE("vehicle_speed_boost");
 
 		if (vehicle->isVehicleObject() && !vehicle->hasBuff(vehicleSpeedBoostCRC)) {
-			vehicle->info(true) << "MountCommand applying vehicle speed boost buff (4.0x) to "
-				<< vehicle->getObjectTemplate()->getFullTemplateString() << " baseRunSpeed=" << vehicle->getRunSpeed();
 			ManagedReference<PlayerVehicleBuff*> buff = new PlayerVehicleBuff(vehicle, vehicleSpeedBoostCRC, 604800, BuffType::OTHER);
 
 			Locker blocker(buff, vehicle);
@@ -157,9 +155,9 @@ public:
 			buff->setAccelerationMultiplierMod(4.0f);
 
 			vehicle->addBuff(buff);
-		} else if (vehicle->isVehicleObject()) {
-			vehicle->info(true) << "MountCommand vehicle speed boost buff already active for "
-				<< vehicle->getObjectTemplate()->getFullTemplateString() << " baseRunSpeed=" << vehicle->getRunSpeed();
+
+			vehicle->info(true) << "Applying vehicle speed boost buff (4.0x) to " << vehicle->getObjectTemplate()->getFullTemplateString()
+				<< " baseRunSpeed=" << vehicle->getRunSpeed();
 		}
 
 		// get vehicle speed

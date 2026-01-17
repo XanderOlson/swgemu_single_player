@@ -217,6 +217,31 @@ void DraftSchematicObjectTemplate::readObject(LuaObject* templateData) {
 		++i;
 	}
 
+	if (!ingredientTemplateNames->isEmpty()) {
+		int totalQuantity = 0;
+		for (int i = 0; i < resourceQuantities->size(); ++i) {
+			totalQuantity += resourceQuantities->get(i);
+		}
+
+		String templateName = ingredientTemplateNames->get(0);
+		int finalQuantity = totalQuantity > 0 ? totalQuantity : 1;
+
+		ingredientTemplateNames->removeAll();
+		ingredientTitleNames->removeAll();
+		ingredientSlotType->removeAll();
+		ingredientAppearance->removeAll();
+		resourceTypes->removeAll();
+		resourceQuantities->removeAll();
+		contribution->removeAll();
+
+		ingredientTemplateNames->add(templateName);
+		ingredientTitleNames->add("metal");
+		ingredientSlotType->add(0);
+		resourceTypes->add("metal");
+		resourceQuantities->add(finalQuantity);
+		contribution->add(100);
+	}
+
 	if (ingredientAppearance->isEmpty() && !ingredientTemplateNames->isEmpty()) {
 		for (int i = 0; i < ingredientTemplateNames->size(); ++i) {
 			ingredientAppearance->add("");

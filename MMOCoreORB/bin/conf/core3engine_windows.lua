@@ -1,3 +1,4 @@
+-- luacheck: globals TaskManager
 TaskManager = {
 	defaultSchedulerThreads = 2,
 	defaultWorkerThreadsPerQueue = 1,

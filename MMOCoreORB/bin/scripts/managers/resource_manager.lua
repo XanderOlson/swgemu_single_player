@@ -46,11 +46,11 @@ buildInitialResourcesFromScript = 1 -- Use a script to build resource database w
 --  These indicate zone names where resources spawn
 activeZones = "corellia,tatooine,lok,naboo,rori,endor,talus,yavin4,dathomir,dantooine"
 
-averageShiftTime = 7200000 -- In milliseconds
+averageShiftTime = 600000 -- In milliseconds
   --  This is the time between each time the Resource Manager schedules
   --  itself to run again.
   --  *** Default is 2 hours (7200000) ***
-  --  *** Good testing time is (15000) ***
+  --  *** Good testing time is (10 minutes 600000) ***
 
 aveduration = 86400 -- In seconds
   -- This is the modifier for how long spawns are in shift
@@ -76,6 +76,10 @@ lowerGateOverride = 1000 -- 1-1000
   -- quality control, especially for resources with 
   -- very high gates.  
   -- Set to 1000 for standard SOE behavior.
+
+forceMaxResourceStats = 1
+  -- When enabled (1), resource stats always roll at the max gate value.
+  -- Set to 0 for standard SOE behavior.
   
 maxSpawnQuantity = 0 
   -- This value specifies the quantity that a specific resource
@@ -120,4 +124,3 @@ fixedpoolexcludes = ""
   -- The native pool will have one of each of the items listed in the includes spawned on each planet at all times, but planet restricted.
 nativepoolincludes = "milk_domesticated,milk_wild,meat_domesticated,meat_wild,meat_herbivore,meat_carnivore,meat_reptilian,meat_avian,meat_egg,meat_insect,seafood_fish,seafood_crustacean,seafood_mollusk,bone_mammal,bone_avian,bone_horn,hide_wooly,hide_bristley,hide_leathery,hide_scaley,corn_domesticated,corn_wild,rice_domesticated,rice_wild,oats_domesticated,oats_wild,wheat_domesticated,wheat_wild,vegetable_greens,vegetable_beans,vegetable_tubers,vegetable_fungi,fruit_fruits,fruit_berries,fruit_flowers,wood_deciduous,softwood_conifer,softwood_evergreen,energy_renewable_unlimited_solar,energy_renewable_unlimited_wind,fiberplast,water_vapor"
 nativepoolexcludes = ""
-
