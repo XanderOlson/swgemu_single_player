@@ -31,3 +31,19 @@ jobs:
       - name: Run make build-ninja-debug
         run: make build-ninja-debug
         working-directory: MMOCoreORB
+  cpp-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install clang-tidy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-tidy
+      - name: Generate compilation database
+        run: cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        working-directory: MMOCoreORB
+      - name: Run clang-tidy
+        run: |
+          git ls-files '*.cpp' '*.cc' '*.cxx' '*.h' '*.hpp' \
+            | xargs clang-tidy -p MMOCoreORB/build
