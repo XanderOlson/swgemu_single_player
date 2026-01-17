@@ -7,6 +7,8 @@
 
 #include "server/zone/objects/scene/SceneObject.h"
 #include "server/zone/managers/objectcontroller/ObjectController.h"
+#include "server/zone/objects/creature/buffs/PlayerVehicleBuff.h"
+#include "server/zone/objects/creature/buffs/BuffType.h"
 #include "templates/params/creature/PlayerArrangement.h"
 
 class MountCommand : public QueueCommand {
@@ -140,6 +142,22 @@ public:
 					gallop->applyAllModifiers();
 				}
 			}, "AddGallopModsLambda");
+		}
+
+		const uint32 vehicleSpeedBoostCRC = STRING_HASHCODE("vehicle_speed_boost");
+
+		if (vehicle->isVehicleObject() && !vehicle->hasBuff(vehicleSpeedBoostCRC)) {
+			ManagedReference<PlayerVehicleBuff*> buff = new PlayerVehicleBuff(vehicle, vehicleSpeedBoostCRC, 604800, BuffType::OTHER);
+
+			Locker blocker(buff, vehicle);
+
+			buff->setSpeedMultiplierMod(4.0f);
+			buff->setAccelerationMultiplierMod(4.0f);
+
+			vehicle->addBuff(buff);
+
+			vehicle->info(true) << "Applying vehicle speed boost buff (4.0x) to " << vehicle->getObjectTemplate()->getFullTemplateString()
+				<< " baseRunSpeed=" << vehicle->getRunSpeed();
 		}
 
 		// get vehicle speed
