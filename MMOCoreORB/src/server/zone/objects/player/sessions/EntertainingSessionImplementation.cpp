@@ -1024,7 +1024,7 @@ void EntertainingSessionImplementation::awardEntertainerExperience() {
 				flourishXp = 0;
 		}
 
-		if (flourishXp > 0 && (isDancing() || isPlayingMusic())) {
+		if (isDancing() || isPlayingMusic()) {
 			String xptype;
 
 			if (isDancing())
@@ -1056,7 +1056,8 @@ void EntertainingSessionImplementation::awardEntertainerExperience() {
 				}
 			}
 
-			int xpAmount = flourishXp + performance->getBaseXp();
+			int baseXp = Math::max(1, performance->getBaseXp());
+			int xpAmount = baseXp + flourishXp;
 
 			int audienceSize = Math::min(getBandAudienceSize(), 50);
 			float audienceMod = audienceSize / 50.f;
