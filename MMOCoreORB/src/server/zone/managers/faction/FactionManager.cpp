@@ -129,26 +129,27 @@ void FactionManager::awardFactionStanding(CreatureObject* player, const String& 
 		ghost->increaseFactionStanding(enemy, gain);
 	}
 
-	ghost->decreaseFactionStanding(factionName, lose);
+	// Disabled: NPC kills should not apply negative standing.
+	// ghost->decreaseFactionStanding(factionName, lose);
 
-	//Lose faction standing to allies of the creature.
-	for (int i = 0; i < allies->size(); ++i) {
-		const String& ally = allies->get(i);
-
-		if ((ally == "rebel" || ally == "imperial")) {
-			continue;
-		}
-
-		if (!factionMap.contains(ally))
-			continue;
-
-		const Faction& allyFaction = factionMap.get(ally);
-
-		if (!allyFaction.isPlayerAllowed())
-			continue;
-
-		ghost->decreaseFactionStanding(ally, lose);
-	}
+	// Disabled: NPC kills should not apply negative standing to allies.
+	// for (int i = 0; i < allies->size(); ++i) {
+	// 	const String& ally = allies->get(i);
+	//
+	// 	if ((ally == "rebel" || ally == "imperial")) {
+	// 		continue;
+	// 	}
+	//
+	// 	if (!factionMap.contains(ally))
+	// 		continue;
+	//
+	// 	const Faction& allyFaction = factionMap.get(ally);
+	//
+	// 	if (!allyFaction.isPlayerAllowed())
+	// 		continue;
+	//
+	// 	ghost->decreaseFactionStanding(ally, lose);
+	// }
 }
 
 void FactionManager::awardSpaceFactionPoints(CreatureObject* player, uint32 shipTypeHash, const String& factionName, uint32 shipLevel, int totalShipmates, int imperialReward, int rebelReward) {
