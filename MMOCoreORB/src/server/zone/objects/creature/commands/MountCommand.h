@@ -151,10 +151,13 @@ public:
 
 			Locker blocker(buff, vehicle);
 
-			buff->setSpeedMultiplierMod(2.0f);
-			buff->setAccelerationMultiplierMod(2.0f);
+			buff->setSpeedMultiplierMod(4.0f);
+			buff->setAccelerationMultiplierMod(4.0f);
 
 			vehicle->addBuff(buff);
+
+			vehicle->info(true) << "Applying vehicle speed boost buff (4.0x) to " << vehicle->getObjectTemplate()->getFullTemplateString()
+				<< " baseRunSpeed=" << vehicle->getRunSpeed();
 		}
 
 		// get vehicle speed

@@ -92,6 +92,8 @@ void PlayerVehicleBuffImplementation::updateRiderSpeeds() {
 
 		// Update Vehicles Speed
 		vehicle->setRunSpeed(newSpeed);
+		vehicle->info(true) << "Vehicle speed buff update for " << vehicle->getObjectTemplate()->getFullTemplateString()
+			<< " speedMultiplier=" << vehicle->getSpeedMultiplierMod() << " runSpeed=" << newSpeed;
 
 		ManagedReference<CreatureObject*> rider = vehicle->getSlottedObject("rider").castTo<CreatureObject*>();
 
