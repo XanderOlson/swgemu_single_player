@@ -3223,8 +3223,9 @@ void PlayerObjectImplementation::activateJournalQuest(unsigned int questCrc, boo
 	CreatureObject* creature = cast<CreatureObject*>(getParent().get().get());
 
 	if (creature == nullptr) {
-		info(true) << "QuestJournal activate questCrc=0x" << String::hexvalueOf(questCrc)
-				   << " skipped (creature nullptr).";
+		Logger::console.info(true) << "QuestJournal activate questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (creature nullptr).";
 		return;
 	}
 
@@ -3234,8 +3235,9 @@ void PlayerObjectImplementation::activateJournalQuest(unsigned int questCrc, boo
 	questData.setCompletedFlag(0);
 
 	setPlayerQuestData(questCrc, questData);
-	info(true) << "QuestJournal activate questCrc=0x" << String::hexvalueOf(questCrc)
-			   << " ownerId=" << getObjectID();
+	Logger::console.info(true) << "QuestJournal activate questCrc=0x" << String::hexvalueOf(questCrc)
+							   << " playerOid=" << getObjectID()
+							   << " creature=" << creature->getDisplayedName();
 
 	activateJournalQuestTask(questCrc, 0, notifyClient);
 }
@@ -3244,23 +3246,26 @@ void PlayerObjectImplementation::completeJournalQuest(unsigned int questCrc, boo
 	PlayerQuestData questData = getQuestData(questCrc);
 
 	if (questData.getOwnerId() == 0) {
-		info(true) << "QuestJournal complete questCrc=0x" << String::hexvalueOf(questCrc)
-				   << " skipped (no owner).";
+		Logger::console.info(true) << "QuestJournal complete questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (no owner).";
 		return;
 	}
 
 	CreatureObject* creature = cast<CreatureObject*>(getParent().get().get());
 
 	if (creature == nullptr) {
-		info(true) << "QuestJournal complete questCrc=0x" << String::hexvalueOf(questCrc)
-				   << " skipped (creature nullptr).";
+		Logger::console.info(true) << "QuestJournal complete questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (creature nullptr).";
 		return;
 	}
 
 	questData.setCompletedFlag(1);
 	setPlayerQuestData(questCrc, questData);
-	info(true) << "QuestJournal complete questCrc=0x" << String::hexvalueOf(questCrc)
-			   << " ownerId=" << getObjectID();
+	Logger::console.info(true) << "QuestJournal complete questCrc=0x" << String::hexvalueOf(questCrc)
+							   << " playerOid=" << getObjectID()
+							   << " creature=" << creature->getDisplayedName();
 
 	if (notifyClient)
 		creature->sendSystemMessage("@quest/quests:quest_journal_updated");
@@ -3270,22 +3275,25 @@ void PlayerObjectImplementation::clearJournalQuest(unsigned int questCrc, bool n
 	PlayerQuestData questData = getQuestData(questCrc);
 
 	if (questData.getOwnerId() == 0) {
-		info(true) << "QuestJournal clear questCrc=0x" << String::hexvalueOf(questCrc)
-				   << " skipped (no owner).";
+		Logger::console.info(true) << "QuestJournal clear questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (no owner).";
 		return;
 	}
 
 	CreatureObject* creature = cast<CreatureObject*>(getParent().get().get());
 
 	if (creature == nullptr) {
-		info(true) << "QuestJournal clear questCrc=0x" << String::hexvalueOf(questCrc)
-				   << " skipped (creature nullptr).";
+		Logger::console.info(true) << "QuestJournal clear questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (creature nullptr).";
 		return;
 	}
 
 	clearPlayerQuestData(questCrc);
-	info(true) << "QuestJournal clear questCrc=0x" << String::hexvalueOf(questCrc)
-			   << " ownerId=" << getObjectID();
+	Logger::console.info(true) << "QuestJournal clear questCrc=0x" << String::hexvalueOf(questCrc)
+							   << " playerOid=" << getObjectID()
+							   << " creature=" << creature->getDisplayedName();
 
 	if (notifyClient)
 		creature->sendSystemMessage("@quest/quests:quest_journal_updated");
@@ -3293,30 +3301,34 @@ void PlayerObjectImplementation::clearJournalQuest(unsigned int questCrc, bool n
 
 void PlayerObjectImplementation::activateJournalQuestTask(unsigned int questCrc, int taskNum, bool notifyClient) {
 	if (taskNum > 15) {
-		info(true) << "QuestJournal activate task questCrc=0x" << String::hexvalueOf(questCrc)
-				   << " skipped (taskNum=" << taskNum << " out of range).";
+		Logger::console.info(true) << "QuestJournal activate task questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (taskNum=" << taskNum << " out of range).";
 		return;
 	}
 
 	PlayerQuestData questData = getQuestData(questCrc);
 
 	if (questData.getOwnerId() == 0) {
-		info(true) << "QuestJournal activate task questCrc=0x" << String::hexvalueOf(questCrc)
-				   << " skipped (no owner, taskNum=" << taskNum << ").";
+		Logger::console.info(true) << "QuestJournal activate task questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (no owner, taskNum=" << taskNum << ").";
 		return;
 	}
 
 	if (questData.getActiveStepBitmask() & (1 << taskNum)) {
-		info(true) << "QuestJournal activate task questCrc=0x" << String::hexvalueOf(questCrc)
-				   << " skipped (already active taskNum=" << taskNum << ").";
+		Logger::console.info(true) << "QuestJournal activate task questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (already active taskNum=" << taskNum << ").";
 		return;
 	}
 
 	CreatureObject* creature = cast<CreatureObject*>(getParent().get().get());
 
 	if (creature == nullptr) {
-		info(true) << "QuestJournal activate task questCrc=0x" << String::hexvalueOf(questCrc)
-				   << " skipped (creature nullptr, taskNum=" << taskNum << ").";
+		Logger::console.info(true) << "QuestJournal activate task questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (creature nullptr, taskNum=" << taskNum << ").";
 		return;
 	}
 
@@ -3329,10 +3341,12 @@ void PlayerObjectImplementation::activateJournalQuestTask(unsigned int questCrc,
 	// creature->info(true) << "activateJournalQuestTask -- Quest: " << questCrc << " Active Step Bitmask: " << activeStepBit << " Complete Step Bit: " << completedStepBit;
 
 	setPlayerQuestData(questCrc, questData);
-	info(true) << "QuestJournal activate task questCrc=0x" << String::hexvalueOf(questCrc)
-			   << " taskNum=" << taskNum
-			   << " activeMask=0x" << String::hexvalueOf(questData.getActiveStepBitmask())
-			   << " completedMask=0x" << String::hexvalueOf(questData.getCompletedStepBitmask());
+	Logger::console.info(true) << "QuestJournal activate task questCrc=0x" << String::hexvalueOf(questCrc)
+							   << " playerOid=" << getObjectID()
+							   << " taskNum=" << taskNum
+							   << " activeMask=0x" << String::hexvalueOf(questData.getActiveStepBitmask())
+							   << " completedMask=0x" << String::hexvalueOf(questData.getCompletedStepBitmask())
+							   << " creature=" << creature->getDisplayedName();
 
 	if (notifyClient) {
 		creature->sendSystemMessage("@quest/quests:quest_journal_updated");
@@ -3341,28 +3355,34 @@ void PlayerObjectImplementation::activateJournalQuestTask(unsigned int questCrc,
 
 void PlayerObjectImplementation::completeJournalQuestTask(unsigned int questCrc, int taskNum, bool notifyClient) {
 	if (taskNum > 15) {
-		info(true) << "QuestJournal complete task questCrc=0x" << String::hexvalueOf(questCrc)
-				   << " skipped (taskNum=" << taskNum << " out of range).";
+		Logger::console.info(true) << "QuestJournal complete task questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (taskNum=" << taskNum << " out of range).";
 		return;
 	}
 
 	PlayerQuestData questData = getQuestData(questCrc);
 
 	if (questData.getOwnerId() == 0) {
-		info(true) << "QuestJournal complete task questCrc=0x" << String::hexvalueOf(questCrc)
-				   << " skipped (no owner, taskNum=" << taskNum << ").";
+		Logger::console.info(true) << "QuestJournal complete task questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (no owner, taskNum=" << taskNum << ").";
 		return;
 	}
 
 	if ((questData.getActiveStepBitmask() & (1 << taskNum)) == 0) {
-		info(true) << "QuestJournal complete task questCrc=0x" << String::hexvalueOf(questCrc)
-				   << " skipped (taskNum=" << taskNum << " not active).";
+		Logger::console.info(true) << "QuestJournal complete task questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (taskNum=" << taskNum << " not active).";
 		return;
 	}
 
 	CreatureObject* creature = cast<CreatureObject*>(getParent().get().get());
 
 	if (creature == nullptr) {
+		Logger::console.info(true) << "QuestJournal complete task questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (creature nullptr, taskNum=" << taskNum << ").";
 		return;
 	}
 
@@ -3375,10 +3395,12 @@ void PlayerObjectImplementation::completeJournalQuestTask(unsigned int questCrc,
 	// creature->info(true) << "completeJournalQuestTask -- Quest: " << questCrc << " Active Step Bitmask: " << activeStepBit << " Complete Step Bit: " << completedStepBit;
 
 	setPlayerQuestData(questCrc, questData);
-	info(true) << "QuestJournal complete task questCrc=0x" << String::hexvalueOf(questCrc)
-			   << " taskNum=" << taskNum
-			   << " activeMask=0x" << String::hexvalueOf(questData.getActiveStepBitmask())
-			   << " completedMask=0x" << String::hexvalueOf(questData.getCompletedStepBitmask());
+	Logger::console.info(true) << "QuestJournal complete task questCrc=0x" << String::hexvalueOf(questCrc)
+							   << " playerOid=" << getObjectID()
+							   << " taskNum=" << taskNum
+							   << " activeMask=0x" << String::hexvalueOf(questData.getActiveStepBitmask())
+							   << " completedMask=0x" << String::hexvalueOf(questData.getCompletedStepBitmask())
+							   << " creature=" << creature->getDisplayedName();
 
 	if (notifyClient) {
 		creature->sendSystemMessage("@quest/quests:task_complete");
@@ -3387,24 +3409,27 @@ void PlayerObjectImplementation::completeJournalQuestTask(unsigned int questCrc,
 
 void PlayerObjectImplementation::clearJournalQuestTask(unsigned int questCrc, int taskNum, bool notifyClient) {
 	if (taskNum > 15) {
-		info(true) << "QuestJournal clear task questCrc=0x" << String::hexvalueOf(questCrc)
-				   << " skipped (taskNum=" << taskNum << " out of range).";
+		Logger::console.info(true) << "QuestJournal clear task questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (taskNum=" << taskNum << " out of range).";
 		return;
 	}
 
 	PlayerQuestData questData = getQuestData(questCrc);
 
 	if (questData.getOwnerId() == 0) {
-		info(true) << "QuestJournal clear task questCrc=0x" << String::hexvalueOf(questCrc)
-				   << " skipped (no owner, taskNum=" << taskNum << ").";
+		Logger::console.info(true) << "QuestJournal clear task questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (no owner, taskNum=" << taskNum << ").";
 		return;
 	}
 
 	CreatureObject* creature = cast<CreatureObject*>(getParent().get().get());
 
 	if (creature == nullptr) {
-		info(true) << "QuestJournal clear task questCrc=0x" << String::hexvalueOf(questCrc)
-				   << " skipped (creature nullptr, taskNum=" << taskNum << ").";
+		Logger::console.info(true) << "QuestJournal clear task questCrc=0x" << String::hexvalueOf(questCrc)
+								   << " playerOid=" << getObjectID()
+								   << " skipped (creature nullptr, taskNum=" << taskNum << ").";
 		return;
 	}
 
@@ -3412,10 +3437,12 @@ void PlayerObjectImplementation::clearJournalQuestTask(unsigned int questCrc, in
 	questData.setCompletedStepBitmask(questData.getCompletedStepBitmask() & ~(1 << taskNum));
 
 	setPlayerQuestData(questCrc, questData);
-	info(true) << "QuestJournal clear task questCrc=0x" << String::hexvalueOf(questCrc)
-			   << " taskNum=" << taskNum
-			   << " activeMask=0x" << String::hexvalueOf(questData.getActiveStepBitmask())
-			   << " completedMask=0x" << String::hexvalueOf(questData.getCompletedStepBitmask());
+	Logger::console.info(true) << "QuestJournal clear task questCrc=0x" << String::hexvalueOf(questCrc)
+							   << " playerOid=" << getObjectID()
+							   << " taskNum=" << taskNum
+							   << " activeMask=0x" << String::hexvalueOf(questData.getActiveStepBitmask())
+							   << " completedMask=0x" << String::hexvalueOf(questData.getCompletedStepBitmask())
+							   << " creature=" << creature->getDisplayedName();
 
 	if (notifyClient) {
 		creature->sendSystemMessage("@quest/quests:quest_journal_updated");
