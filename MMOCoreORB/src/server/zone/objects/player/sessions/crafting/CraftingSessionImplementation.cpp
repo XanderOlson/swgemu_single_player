@@ -33,6 +33,35 @@
 // #define DEBUG_CRAFTING_SESSION
 // #define DEBUG_EXPERIMENTATION
 
+namespace {
+constexpr float kWeaponKraytDamageBonus = 100.0f;
+constexpr float kWeaponKraytAttackSpeedBonus = -1.0f;
+
+void applyWeaponKraytBonus(CraftingValues* values) {
+	if (values == nullptr) {
+		return;
+	}
+
+	auto applyDelta = [&](const String& attribute, float delta) {
+		if (!values->hasExperimentalAttribute(attribute)) {
+			return;
+		}
+
+		float minValue = values->getMinValue(attribute);
+		float maxValue = values->getMaxValue(attribute);
+		float currentValue = values->getCurrentValue(attribute);
+
+		values->setMinValue(attribute, minValue + delta);
+		values->setMaxValue(attribute, maxValue + delta);
+		values->setCurrentValue(attribute, currentValue + delta);
+	};
+
+	applyDelta("mindamage", kWeaponKraytDamageBonus);
+	applyDelta("maxdamage", kWeaponKraytDamageBonus);
+	applyDelta("attackspeed", kWeaponKraytAttackSpeedBonus);
+}
+} // namespace
+
 int CraftingSessionImplementation::initializeSession(CraftingTool* tool, CraftingStation* station) {
 	craftingTool = tool;
 	craftingStation = station;
@@ -778,6 +807,10 @@ void CraftingSessionImplementation::initialAssembly(int clientCounter) {
 	Reference<CraftingValues*> craftingValues = manufactureSchematic->getCraftingValues();
 	craftingValues->setManufactureSchematic(manufactureSchematic);
 	craftingValues->setPlayer(crafter);
+
+	if (prototype->isWeaponObject()) {
+		applyWeaponKraytBonus(craftingValues);
+	}
 
 	if (prototype->isWeaponObject()) {
 		unsigned int type = prototype->getClientGameObjectType();
