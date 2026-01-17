@@ -30,10 +30,7 @@ public:
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
 		ZoneServer* zoneServer = server->getZoneServer();
 
-		Logger::console.info(true) << "MountCommand: invoked target=" << target;
-
 		if (zoneServer == nullptr || !creature->checkCooldownRecovery("mount_dismount")) {
-			Logger::console.info(true) << "MountCommand: early-exit zoneServer-null-or-cooldown";
 			return GENERALERROR;
 		}
 
@@ -41,31 +38,26 @@ public:
 			ManagedReference<ObjectController*> objectController = zoneServer->getObjectController();
 			objectController->activateCommand(creature, STRING_HASHCODE("dismount"), 0, 0, "");
 
-			Logger::console.info(true) << "MountCommand: already riding, issued dismount";
 			return GENERALERROR;
 		}
 
 		if (target == 0) {
-			Logger::console.info(true) << "MountCommand: target=0";
 			return GENERALERROR;
 		}
 
 		ManagedReference<SceneObject*> object = zoneServer->getObject(target);
 
 		if (object == nullptr) {
-			Logger::console.info(true) << "MountCommand: target not found";
 			return INVALIDTARGET;
 		}
 
 		if (!object->isVehicleObject() && !object->isMount()) {
-			Logger::console.info(true) << "MountCommand: target not vehicle or mount";
 			return INVALIDTARGET;
 		}
 
 		CreatureObject* vehicle = object->asCreatureObject();
 
 		if (vehicle == nullptr) {
-			Logger::console.info(true) << "MountCommand: vehicle cast failed";
 			return INVALIDTARGET;
 		}
 
@@ -81,23 +73,19 @@ public:
 			return GENERALERROR;
 
 		if (!vehicle->isInRange(creature, 7.f) || !CollisionManager::checkLineOfSight(vehicle, creature)) {
-			Logger::console.info(true) << "MountCommand: out of range or no LOS";
 			return GENERALERROR;
 		}
 
 		if (creature->getParent() != nullptr || vehicle->getParent() != nullptr) {
-			Logger::console.info(true) << "MountCommand: creature or vehicle has parent";
 			return GENERALERROR;
 		}
 
 		if (vehicle->isDisabled()) {
 			creature->sendSystemMessage("@pet/pet_menu:cant_mount_veh_disabled");
-			Logger::console.info(true) << "MountCommand: vehicle disabled";
 			return GENERALERROR;
 		}
 
 		if (vehicle->isIncapacitated() || vehicle->isDead()) {
-			Logger::console.info(true) << "MountCommand: vehicle incapacitated or dead";
 			return GENERALERROR;
 		}
 
@@ -113,14 +101,11 @@ public:
 			vehicle->error("could not add creature");
 			vehicle->clearState(CreatureState::MOUNTEDCREATURE);
 
-			Logger::console.info(true) << "MountCommand: transferObject failed";
 			return GENERALERROR;
 		}
 
-		Logger::console.info(true) << "MountCommand: transferObject success";
 		creature->synchronizeCloseObjects();
 		creature->setState(CreatureState::RIDINGMOUNT);
-		Logger::console.info(true) << "MountCommand: rider state set";
 
 		creature->updateCooldownTimer("mount_dismount", 2000);
 
@@ -163,12 +148,7 @@ public:
 		const uint32 vehicleSpeedBoostCRC = STRING_HASHCODE("vehicle_speed_boost");
 		const uint32 riderSpeedBoostCRC = STRING_HASHCODE("vehicle_speed_boost_rider");
 
-		Logger::console.info(true) << "MountCommand: vehicle flags isVehicleObject=" << (vehicle->isVehicleObject() ? "true" : "false")
-			<< " isMount=" << (vehicle->isMount() ? "true" : "false")
-			<< " hasVehicleSpeedBoost=" << (vehicle->hasBuff(vehicleSpeedBoostCRC) ? "true" : "false");
-
 		if (vehicle->isVehicleObject() && !vehicle->hasBuff(vehicleSpeedBoostCRC)) {
-			Logger::console.info(true) << "MountCommand: applying vehicle speed boost";
 			ManagedReference<PlayerVehicleBuff*> buff = new PlayerVehicleBuff(vehicle, vehicleSpeedBoostCRC, 604800, BuffType::OTHER);
 
 			Locker blocker(buff, vehicle);
@@ -177,9 +157,6 @@ public:
 			buff->setAccelerationMultiplierMod(4.0f);
 
 			vehicle->addBuff(buff);
-
-			Logger::console.info(true) << "Applying vehicle speed boost buff (4.0x) to " << vehicle->getObjectTemplate()->getFullTemplateString()
-				<< " baseRunSpeed=" << vehicle->getRunSpeed();
 		}
 
 		if (!creature->hasBuff(riderSpeedBoostCRC)) {
