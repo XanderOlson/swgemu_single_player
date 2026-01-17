@@ -42,6 +42,7 @@
 -- Core3 Config File
 -- 0 = false, 1 = true
 
+-- luacheck: globals Core3
 Core3 = {
 	------Server Make Options------
 	MakeLogin = 1,
@@ -239,7 +240,8 @@ Core3 = {
 	MaxAuctionSearchJobs = 1,
 	DumpObjFiles = 1,
 	ProgressMonitors = "true",
-	UnloadContainers = 1, -- Whether to unload container contents from RAM after the container hasn't been accessed for a time
+	UnloadContainers = 1, -- Whether to unload container contents from RAM after the container hasn't been accessed
+	-- for a time
 
 	------Server Config------
 	CharacterBuilderEnabled = "true",
