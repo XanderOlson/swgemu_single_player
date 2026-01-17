@@ -3215,9 +3215,8 @@ void PlayerObjectImplementation::activateJournalQuest(unsigned int questCrc, boo
 	PlayerQuestData questData = getQuestData(questCrc);
 
 	if (questData.getOwnerId() != 0) {
-		Logger::console.info(true) << "QuestJournal activate questCrc=0x" << String::hexvalueOf(questCrc)
-								   << " playerOid=" << getObjectID()
-								   << " skipped (already owned).";
+		info(true) << "QuestJournal activate questCrc=0x" << String::hexvalueOf(questCrc)
+				   << " skipped (already owned).";
 		return;
 	}
 
