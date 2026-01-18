@@ -272,7 +272,7 @@ function ExperienceConverter:convertXpTransferCallback(pPlayer, pSui, eventIndex
 		return
 	end
 
-	local convertedXp = math.floor(xpToConvert / ratio)
+	local convertedXp = math.floor(xpToConvert * 2.0)
 	local modValue = xpToConvert % ratio
 
 	if modValue > 0 then
