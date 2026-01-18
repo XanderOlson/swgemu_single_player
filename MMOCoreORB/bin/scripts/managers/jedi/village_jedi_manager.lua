@@ -1,3 +1,4 @@
+-- Village unlock gate for force-sensitive skills is commented out for testing purposes.
 JediManager = require("managers.jedi.jedi_manager")
 local Logger = require("utils.logger")
 local QuestManager = require("managers.quest.quest_manager")
@@ -100,6 +101,7 @@ end
 
 --Check for force skill prerequisites
 function VillageJediManager:canLearnSkill(pPlayer, skillName)
+	--[[
 	if string.find(skillName, "force_sensitive") ~= nil then
 		local index = string.find(skillName, "0")
 		if index ~= nil then
@@ -109,7 +111,7 @@ function VillageJediManager:canLearnSkill(pPlayer, skillName)
 			end
 		end
 	end
-
+	]]
 	if skillName == "force_title_jedi_rank_01" and CreatureObject(pPlayer):getForceSensitiveSkillCount(false) < 24 then
 		return false
 	end
