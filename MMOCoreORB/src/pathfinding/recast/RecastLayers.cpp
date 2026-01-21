@@ -75,6 +75,24 @@ inline bool overlapRange(const unsigned short amin, const unsigned short amax,
 	return (amin > bmax || amax < bmin) ? false : true;
 }
 
+#ifdef COMPILE_CORE3_TESTS
+bool rcTestContains(const unsigned char* a, const unsigned char an, const unsigned char v)
+{
+	return contains(a, an, v);
+}
+
+bool rcTestAddUnique(unsigned char* a, unsigned char& an, int anMax, unsigned char v)
+{
+	return addUnique(a, an, anMax, v);
+}
+
+bool rcTestOverlapRange(const unsigned short amin, const unsigned short amax,
+						const unsigned short bmin, const unsigned short bmax)
+{
+	return overlapRange(amin, amax, bmin, bmax);
+}
+#endif
+
 
 
 struct rcLayerSweepSpan
