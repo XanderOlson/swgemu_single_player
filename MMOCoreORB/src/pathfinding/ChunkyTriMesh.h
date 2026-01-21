@@ -55,5 +55,17 @@ int rcGetChunksOverlappingRect(const rcChunkyTriMesh* cm, float bmin[2], float b
 /// Returns the chunk indices which overlap the input segment.
 int rcGetChunksOverlappingSegment(const rcChunkyTriMesh* cm, float p[2], float q[2], int* ids, const int maxIds);
 
+#if defined(CORE3_DOCTEST)
+namespace chunky_trimesh {
+namespace test {
+int LongestAxis(float x, float y);
+bool CheckOverlapRect(const float amin[2], const float amax[2],
+					  const float bmin[2], const float bmax[2]);
+bool CheckOverlapSegment(const float p[2], const float q[2],
+						 const float bmin[2], const float bmax[2]);
+} // namespace test
+} // namespace chunky_trimesh
+#endif
+
 
 #endif // CHUNKYTRIMESH_H

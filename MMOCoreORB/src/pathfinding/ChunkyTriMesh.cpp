@@ -254,6 +254,26 @@ static bool checkOverlapSegment(const float p[2], const float q[2],
 	return true;
 }
 
+#if defined(CORE3_DOCTEST)
+namespace chunky_trimesh {
+namespace test {
+int LongestAxis(float x, float y) {
+	return longestAxis(x, y);
+}
+
+bool CheckOverlapRect(const float amin[2], const float amax[2],
+					  const float bmin[2], const float bmax[2]) {
+	return checkOverlapRect(amin, amax, bmin, bmax);
+}
+
+bool CheckOverlapSegment(const float p[2], const float q[2],
+						 const float bmin[2], const float bmax[2]) {
+	return checkOverlapSegment(p, q, bmin, bmax);
+}
+} // namespace test
+} // namespace chunky_trimesh
+#endif
+
 int rcGetChunksOverlappingSegment(const rcChunkyTriMesh* cm,
 								  float p[2], float q[2],
 								  int* ids, const int maxIds) {

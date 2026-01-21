@@ -80,6 +80,7 @@ if(COMPILE_TESTS)
 
 	set(core3tests_libs ${tests_headers} ${tests_sources})
 	set(gmock_libs gmock)
+	add_compile_definitions(CORE3_DOCTEST)
 endif(COMPILE_TESTS)
 
 # Create core3 binary
