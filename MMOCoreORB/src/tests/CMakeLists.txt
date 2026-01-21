@@ -5,6 +5,7 @@ enable_testing()
 
 file(GLOB_RECURSE tests_sources "*.cpp")
 file(GLOB_RECURSE tests_headers "*.h")
+list(APPEND tests_sources RecastLayersDoctest.cpp)
 
 #add_executable(core3tests ${tests_headers} ${tests_sources})
 add_library(core3tests ${tests_headers} ${tests_sources})
@@ -16,4 +17,3 @@ add_dependencies(core3tests gmock core3lib)
 add_test(core3tests
         COMMAND $<TARGET_FILE:core3> runUnitTests
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/)
-
