@@ -64,6 +64,28 @@ inline float vcross2(const float* p1, const float* p2, const float* p3)
 	return u1 * v2 - v1 * u2;
 }
 
+#ifdef COMPILE_CORE3_TESTS
+float rcTestVdot2(const float* a, const float* b)
+{
+	return vdot2(a, b);
+}
+
+float rcTestVdistSq2(const float* p, const float* q)
+{
+	return vdistSq2(p, q);
+}
+
+float rcTestVdist2(const float* p, const float* q)
+{
+	return vdist2(p, q);
+}
+
+float rcTestVcross2(const float* p1, const float* p2, const float* p3)
+{
+	return vcross2(p1, p2, p3);
+}
+#endif
+
 static bool circumCircle(const float* p1, const float* p2, const float* p3,
 						 float* c, float& r)
 {
