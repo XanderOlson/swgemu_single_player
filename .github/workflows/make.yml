@@ -32,5 +32,4 @@ jobs:
         run: make build-ninja-debug
         working-directory: MMOCoreORB
       - name: Run unit tests
-        run: ctest -R core3
-        working-directory: MMOCoreORB/build/unix/ninja-debug
+        run: ctest --test-dir MMOCoreORB/build/unix/ninja-debug -R core3 --output-on-failure --verbose
