@@ -181,8 +181,8 @@ if(GIT_FOUND AND RUN_GIT)
 endif()
 
 if(COMPILE_TESTS)
-	add_test(core3
-		COMMAND $<TARGET_FILE:core3> runUnitTests
+	add_test(NAME core3
+		COMMAND ${CMAKE_BINARY_DIR}/src/core3 runUnitTests
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/)
 endif(COMPILE_TESTS)
 
