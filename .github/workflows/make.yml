@@ -27,9 +27,15 @@ jobs:
             libboost-all-dev \
             gdb \
             ninja-build \
-            libjemalloc-dev
+            libjemalloc-dev \
+            lua5.3 \
+            luarocks
+      - name: Install Lua test dependencies
+        run: sudo luarocks install busted
       - name: Run make build-ninja-debug
         run: make build-ninja-debug
         working-directory: MMOCoreORB
       - name: Run unit tests
         run: ctest --test-dir MMOCoreORB/build/unix/ninja-debug -R core3 --output-on-failure --verbose
+      - name: Run Lua tests
+        run: LUA_PATH=MMOCoreORB/bin/scripts/?.lua;; busted --verbose spec
