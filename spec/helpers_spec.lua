@@ -16,7 +16,9 @@ describe("map", function()
 		end)
 
 		assert.same({}, result)
-     
+	end)
+end)
+
 describe("filter", function()
 	it("returns only items matching the predicate", function()
 		local input = { 1, 2, 3, 4 }
