@@ -60,9 +60,9 @@ function TatooineStaticSpawnsSouthScreenPlay:spawnMobiles()
 
 
 	-- Big Game Hunt
-	spawnMobile("tatooine", "krayt_dragon_adolescent", 1800, -1151, 9, -318, -122, 0)
-	spawnMobile("tatooine", "krayt_dragon_adolescent", 1800, -1337, 9, -242, 112, 0)
-	spawnMobile("tatooine", "krayt_dragon_grand", 1800, -1263, 8, -327, -32, 0)
+	spawnMobile("tatooine", "krayt_dragon_adolescent", 180, -1151, 9, -318, -122, 0)
+	spawnMobile("tatooine", "krayt_dragon_adolescent", 180, -1337, 9, -242, 112, 0)
+	spawnMobile("tatooine", "krayt_dragon_grand", 180, -1263, 8, -327, -32, 0)
 
 end
 
