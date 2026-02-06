@@ -12,6 +12,12 @@ class VehicleDecayTask : public Task {
 	ManagedWeakReference<TangibleObject*> vehicleObj;
 	bool initialDecay;
 
+	int getInitialDecayAmount(int decayRate) const {
+		// Initial decay tick is reduced, but always applies at least 1 point of damage.
+		int initialAmount = decayRate / 2;
+		return initialAmount > 0 ? initialAmount : 1;
+	}
+
 public:
 	VehicleDecayTask(TangibleObject* veh) : Task() {
 		vehicleObj = veh;
@@ -44,7 +50,7 @@ public:
 			decayRate = 5;
 
 		if (initialDecay) {
-			vehicle->inflictDamage(vehicle, 0, decayRate / 2, true);
+			vehicle->inflictDamage(vehicle, 0, getInitialDecayAmount(decayRate), true);
 			initialDecay = false;
 		} else {
 			vehicle->inflictDamage(vehicle, 0, decayRate, true);
