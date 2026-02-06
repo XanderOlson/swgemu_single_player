@@ -25,9 +25,12 @@ TEST_F(VehicleDecayTaskTest, DefaultDecayRateIsReducedForInitialTick) {
 
 	vehicle->_setObjectID(1);
 	vehicle->initializeContainerObjectsMap();
-	vehicle->setMaxCondition(100, false);
-	vehicle->setConditionDamage(0, false);
-	vehicle->loadTemplateData(vehicleTemplate);
+	{
+		Locker locker(vehicle);
+		vehicle->setMaxCondition(100, false);
+		vehicle->setConditionDamage(0, false);
+		vehicle->loadTemplateData(vehicleTemplate);
+	}
 
 	VehicleDecayTask decayTask(vehicle);
 	decayTask.run();
