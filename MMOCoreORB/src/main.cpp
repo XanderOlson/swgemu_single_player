@@ -70,7 +70,12 @@ int main(int argc, char* argv[]) {
 
 			testing::InitGoogleTest(&argc, argv);
 
-			ret = RUN_ALL_TESTS();
+			if (!core.runLuaSmokeTest()) {
+				core.error("Lua smoke test failed; aborting unit test run.", true);
+				ret = 1;
+			} else {
+				ret = RUN_ALL_TESTS();
+			}
 
 #ifdef WITH_SWGREALMS_API
 			SWGRealmsAPI::finalizeInstance();
@@ -103,4 +108,3 @@ int main(int argc, char* argv[]) {
 
 	return 0;
 }
-
