@@ -61,7 +61,7 @@ public:
 		}
 
 		if (allFound) {
-			info("Lua smoke test succeeded (required scripts found).", true);
+			info(true) << "Lua smoke test succeeded (required scripts found).";
 		}
 
 		return allFound;

@@ -66,12 +66,12 @@ int main(int argc, char* argv[]) {
 #ifdef COMPILE_CORE3_TESTS
 		} else if (arguments.contains("runUnitTests")) {
 			TestCore core;
-			core.info("Running unit tests...", true);
+			core.info(true) << "Running unit tests...";
 
 			testing::InitGoogleTest(&argc, argv);
 
 			if (!core.runLuaSmokeTest()) {
-				core.error("Lua smoke test failed; aborting unit test run.", true);
+				core.error() << "Lua smoke test failed; aborting unit test run.";
 				ret = 1;
 			} else {
 				ret = RUN_ALL_TESTS();
