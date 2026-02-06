@@ -116,7 +116,7 @@ void AttachmentImplementation::fillAttributeList(AttributeListMessage* msg, Crea
 void AttachmentImplementation::refreshCustomName(bool notifyClient) {
 	String baseName;
 
-	if (!objectName.getFullPath().isEmpty()) {
+	if (!objectName.isEmpty()) {
 		baseName = StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString();
 	}
 
