@@ -12,6 +12,7 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/managers/loot/LootValues.h"
+#include "server/zone/managers/stringid/StringIdManager.h"
 
 void AttachmentImplementation::initializeMembers() {
 	if (gameObjectType == SceneObjectType::CLOTHINGATTACHMENT) {
@@ -41,6 +42,10 @@ void AttachmentImplementation::initializeTransientMembers() {
 
 			skillModifiers.put(key, value);
 		}
+	}
+
+	if (getCustomObjectName().isEmpty()) {
+		refreshCustomName(false);
 	}
 }
 
@@ -87,6 +92,8 @@ void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool
 
 		skillModifiers.put(modName, ((mod <= 0) ? 1 : mod));
 	}
+
+	refreshCustomName(true);
 }
 
 void AttachmentImplementation::fillAttributeList(AttributeListMessage* msg, CreatureObject* object) {
@@ -104,4 +111,34 @@ void AttachmentImplementation::fillAttributeList(AttributeListMessage* msg, Crea
 
 		name.deleteAll();
 	}
+}
+
+void AttachmentImplementation::refreshCustomName(bool notifyClient) {
+	String baseName;
+
+	if (!objectName.isEmpty()) {
+		baseName = StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString();
+	}
+
+	if (baseName.isEmpty()) {
+		baseName = getCustomObjectName().toString();
+	}
+
+	StringBuffer name;
+	name << baseName;
+
+	if (skillModifiers.size() > 0) {
+		const auto& mod = skillModifiers.elementAt(0);
+		int value = mod.getValue();
+
+		name << " (" << mod.getKey();
+		if (value >= 0) {
+			name << " +" << value;
+		} else {
+			name << " " << value;
+		}
+		name << ")";
+	}
+
+	setCustomObjectName(name.toString(), notifyClient);
 }
