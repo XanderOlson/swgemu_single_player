@@ -1694,7 +1694,7 @@ float CreatureObjectImplementation::getSpeedModifier() const {
 		}
 
 		if (hasState(CreatureState::COVER)) {
-			modifier *= hasSkill("combat_rifleman_speed_03") ? 0.5f : 0.f;
+			modifier *= hasSkill("sneak") ? 0.5f : 0.f;
 		}
 	}
 
@@ -1787,6 +1787,10 @@ void CreatureObjectImplementation::updateSpeedAndAccelerationMods() {
 	if (turnScale != tScale) {
 		setTurnScale(tScale, false);
 		updateSize++;
+	}
+
+	if (isInCover() && posture == CreaturePosture::PRONE && !hasSkill("sneak")) {
+		setCurrentSpeed(0);
 	}
 
 	bool notifyClient = isPlayerCreature();
