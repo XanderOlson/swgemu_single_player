@@ -66,9 +66,9 @@ function NightSisterStrongholdScreenPlay:spawnMobiles()
 	spawnMobile("dathomir", "nightsister_slave",300,-4006.7,106.0,-42.2,90,0)
 
 	--inside the walls (not in the building)
-	spawnMobile("dathomir", "nightsister_elder",3600,-3976.1,131.5,-171.3,-169,0)
-	spawnMobile("dathomir", "nightsister_elder",3600,-4003.5,121,-270.1,-54,0)
-	spawnMobile("dathomir", "nightsister_elder",3600,-4155.3,121.0,-99.8,51,0)
+	spawnMobile("dathomir", "nightsister_elder",180,-3976.1,131.5,-171.3,-169,0)
+	spawnMobile("dathomir", "nightsister_elder",180,-4003.5,121,-270.1,-54,0)
+	spawnMobile("dathomir", "nightsister_elder",180,-4155.3,121.0,-99.8,51,0)
 	spawnMobile("dathomir", "nightsister_rancor_tamer",720,-4107.2,126.3,-100,-24,0)
 	spawnMobile("dathomir", "nightsister_protector",1200,-4105.6,126.8,-94.5,178,0)
 	spawnMobile("dathomir", "nightsister_spell_weaver",720,-4100.6,126.7,-95.5,-110,0)
@@ -120,7 +120,7 @@ function NightSisterStrongholdScreenPlay:spawnMobiles()
 	spawnMobile("dathomir", "nightsister_ranger",720,-13.4,0.8,-13.4,14,189378)
 	spawnMobile("dathomir", "nightsister_sentinel",720,-1.2,0.8,-44.4,-85,189379)
 	spawnMobile("dathomir", "nightsister_protector",1200,0.2,0.8,-54.7,-5,189379)
-	spawnMobile("dathomir", "nightsister_elder",3600,-5.8,7.2,-3.0,135,189383)
+	spawnMobile("dathomir", "nightsister_elder",180,-5.8,7.2,-3.0,135,189383)
 	spawnMobile("dathomir", "nightsister_slave",300,-15.0,7.2,-14.3,3,189384)
 
 	--in the cave, make difficulty 'scale' as player progresses into the cave, listed here from bottom to top:
@@ -278,7 +278,7 @@ function NightSisterStrongholdScreenPlay:respawnAxkvaMin()
 end
 
 function NightSisterStrongholdScreenPlay:axkvaKilled(pAxkvaMin)
-	createEvent(86400 * 1000, "NightSisterStrongholdScreenPlay", "respawnAxkvaMin", nil, "")
+	createEvent(180 * 1000, "NightSisterStrongholdScreenPlay", "respawnAxkvaMin", nil, "")
 
 	return 1
 end
