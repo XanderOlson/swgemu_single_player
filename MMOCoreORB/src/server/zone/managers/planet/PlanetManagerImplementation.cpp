@@ -681,6 +681,10 @@ void PlanetManagerImplementation::loadSnapshotObjects() {
 	info("Loaded " + String::valueOf(totalObjects) + " client objects from world snapshot.", true);
 }
 
+bool shouldBypassInterplanetaryCheckForTravel() {
+	return true;
+}
+
 bool PlanetManagerImplementation::isTravelToLocationPermitted(const String& departurePoint, const String& arrivalPlanet, const String& arrivalPoint) {
 	//Check to see that the departure point exists.
 	if (!isExistingPlanetTravelPoint(departurePoint))
@@ -704,6 +708,9 @@ bool PlanetManagerImplementation::isTravelToLocationPermitted(const String& depa
 
 	//If both zones are the same, then intraplanetary travel is allowed.
 	if (arrivalZone == zone)
+		return true;
+
+	if (shouldBypassInterplanetaryCheckForTravel())
 		return true;
 
 	//Check to see if interplanetary travel is allowed between both points.
@@ -1565,7 +1572,6 @@ float PlanetManagerImplementation::findClosestWorldFloor(float x, float y, float
 }
 
 void PlanetManagerImplementation::addPlayerCityTravelPoint(PlanetTravelPoint* planetTravelPoint){
-
 	planetTravelPointList->addPlayerCityTravelPoint(planetTravelPoint);
 
 }
