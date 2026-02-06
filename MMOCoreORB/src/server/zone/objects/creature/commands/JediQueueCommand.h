@@ -72,6 +72,10 @@ public:
 		return true;
 	}
 
+	uint32 getAnimationCRC() const {
+		return animationCRC;
+	}
+
 	int doJediSelfBuffCommand(CreatureObject* creature) const {
 		// first and foremost, we need to toggle this buff off if we already have it
 		if (creature->hasBuff(buffCRC)) {
