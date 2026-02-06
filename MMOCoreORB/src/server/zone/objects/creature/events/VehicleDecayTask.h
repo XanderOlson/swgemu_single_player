@@ -41,7 +41,7 @@ public:
 		int decayRate = vehicleTemplate->getDecayRate();
 
 		if (decayRate == 0)
-			decayRate = 15;
+			decayRate = 5;
 
 		if (initialDecay) {
 			vehicle->inflictDamage(vehicle, 0, decayRate / 2, true);
