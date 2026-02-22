@@ -789,7 +789,7 @@ int PlayerObjectImplementation::addExperience(TransactionLog& trx, const String&
 
 	if (xpTypeCapList.contains(xpType))
 		// Hardcoding a new cap for testing
-		xpCap = xpTypeCapList.get(xpType) + 1000000;
+		xpCap = xpTypeCapList.get(xpType);
 
 	if (xpType.beginsWith("prestige_")) {
 		xpCap = INT_MAX;
