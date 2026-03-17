@@ -744,6 +744,12 @@ void CommandConfigManager::parseVariableData(String varName, LuaObject &command,
 			jediCommand->setVisMod(Lua::getIntParameter(L));
 		else if (varName == "duration")
 			jediCommand->setDuration(Lua::getIntParameter(L));
+		else if (varName == "animation") {
+			String animation = Lua::getStringParameter(L);
+			if (jediCommand->getAnimationCRC() == 0 && !animation.isEmpty()) {
+				jediCommand->setAnimationCRC(animation.hashCode());
+			}
+		}
 		else if (varName == "animationCRC")
 			jediCommand->setAnimationCRC(Lua::getIntParameter(L));
 		else if (varName == "clientEffect")
