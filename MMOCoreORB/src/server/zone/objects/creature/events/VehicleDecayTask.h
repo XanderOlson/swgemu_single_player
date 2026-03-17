@@ -8,14 +8,21 @@
 #include "server/zone/objects/tangible/TangibleObject.h"
 #include "templates/creature/VehicleObjectTemplate.h"
 
-class VehicleDecayTask : public Task {
+class VehicleDecayTask : public Task, public Logger {
 	ManagedWeakReference<TangibleObject*> vehicleObj;
 	bool initialDecay;
+
+	int getInitialDecayAmount(int decayRate) const {
+		// Initial decay tick is reduced, but always applies at least 1 point of damage.
+		int initialAmount = decayRate / 2;
+		return initialAmount > 0 ? initialAmount : 1;
+	}
 
 public:
 	VehicleDecayTask(TangibleObject* veh) : Task() {
 		vehicleObj = veh;
 		initialDecay = true;
+		setLoggingName("VehicleDecayTask");
 	}
 
 	void run() {
@@ -44,7 +51,11 @@ public:
 			decayRate = 5;
 
 		if (initialDecay) {
-			vehicle->inflictDamage(vehicle, 0, decayRate / 2, true);
+			int initialAmount = getInitialDecayAmount(decayRate);
+			info() << "Initial vehicle decay tick: decayRate=" << decayRate
+			       << " initialAmount=" << initialAmount
+			       << " vehicleId=" << vehicle->getObjectID();
+			vehicle->inflictDamage(vehicle, 0, initialAmount, true);
 			initialDecay = false;
 		} else {
 			vehicle->inflictDamage(vehicle, 0, decayRate, true);
